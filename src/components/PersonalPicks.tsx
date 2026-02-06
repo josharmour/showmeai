@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useThemeAnimations } from '../hooks/useThemeAnimations';
 import { Trophy, ArrowRight, Star } from 'lucide-react';
@@ -8,51 +8,43 @@ import { Trophy, ArrowRight, Star } from 'lucide-react';
 const picks = [
   {
     rank: '🥇',
-    title: 'Best Overall AI Model',
-    model: 'Claude Opus 4.6',
-    modelId: 'claude-opus-4',
-    provider: 'Anthropic',
-    reason: 'Claude Opus 4.6 is my #1 recommendation for February 2026. It dominated every major benchmark — 65.4% Terminal-Bench, 80.8% SWE-bench, 72.7% OSWorld. The 1M token context window processes entire codebases, and Agent Teams let multiple AIs collaborate on your project in parallel. It discovered 500+ previously unknown security vulnerabilities during testing. Nothing else comes close for serious knowledge work.',
+    title: 'Best for Autonomous Labor',
+    model: 'GPT-5.3-Codex',
+    modelId: 'gpt-5-codex',
+    provider: 'OpenAI',
+    reason: 'The industry standard for unsupervised execution. GPT-5.3-Codex operates on a "human-on-the-loop" basis, capable of recursive self-improvement and managing its own deployment pipelines. It is the engine you trust to do the work when you are asleep.',
   },
   {
     rank: '🥈',
-    title: 'Best for Everyday Use',
-    model: 'GPT-5.3 Codex',
-    modelId: 'gpt-5',
-    provider: 'OpenAI',
-    reason: 'GPT-5.3 Codex is the most capable agentic coding model OpenAI has ever built — and the first AI that helped build itself. It\'s 25% faster, handles 400K tokens of context, and covers the full dev lifecycle from debugging to deployment to slide decks. If you want a single model that does everything and does it fast, this is it.',
+    title: 'Best for High-Fidelity Reasoning',
+    model: 'Claude Opus 4.6',
+    modelId: 'claude-opus-4-6',
+    provider: 'Anthropic',
+    reason: 'The "System 2" thinker. With Adaptive Thinking and a massive context window, Claude Opus 4.6 is the entity you consult for deep nuance, complex logical deduction, and architectural software design where accuracy is paramount.',
   },
   {
     rank: '🥉',
-    title: 'Best for Developers',
-    model: 'GitHub Copilot',
-    modelId: 'github-copilot',
-    provider: 'GitHub',
-    reason: 'For developers, nothing beats Copilot in 2026. The autonomous Coding Agent can be assigned GitHub issues and independently implements fixes, runs tests, and opens PRs. Agent Skills let you define custom workflows. Native Claude Opus 4.6 and GPT-5.3 integration means you get the best models right in your IDE. It\'s not just a tool — it\'s an AI development team.',
+    title: 'Best for Multimodal Integration',
+    model: 'Gemini 3 Pro',
+    modelId: 'gemini-3-pro',
+    provider: 'Google',
+    reason: 'The "Multimodal Mastermind." Trained natively on text, code, audio, and video. It understands temporal flow in video and powers deep Workspace integration, making it the only choice for "sensing" the world.',
   },
   {
-    rank: '🔍',
-    title: 'Best for Research',
-    model: 'Perplexity Pro',
-    modelId: 'perplexity-pro',
-    provider: 'Perplexity AI',
-    reason: 'If you need to find accurate, up-to-date information with sources you can actually verify, Perplexity Pro is unbeatable. Every claim comes with a clickable citation. It searches the live web using multiple frontier models. For students, researchers, journalists, and anyone who values truth over confidence, this is the tool.',
+    rank: '🛡️',
+    title: 'Best for Sovereign Deployment',
+    model: 'Llama 4 Scout',
+    modelId: 'llama-4-scout',
+    provider: 'Meta',
+    reason: 'For privacy-conscious enterprises and local development, Llama 4 is the open-weight standard. It allows you to run frontier-level intelligence entirely on your own infrastructure (like a MacBook Pro), ensuring zero data exfiltration.',
   },
   {
-    rank: '🎨',
-    title: 'Best for Image Generation',
-    model: 'Midjourney v7',
-    modelId: 'midjourney-v7',
-    provider: 'Midjourney',
-    reason: 'For pure visual quality, nothing touches Midjourney v7. The images it produces are genuinely stunning — cinematic lighting, perfect composition, and an artistic sensibility that makes every generation feel intentional. If you need images that make people stop and stare, this is the only choice.',
-  },
-  {
-    rank: '💰',
-    title: 'Best Budget Pick',
-    model: 'DeepSeek V3 / R1',
-    modelId: 'deepseek-v3',
-    provider: 'DeepSeek',
-    reason: 'DeepSeek proves you don\'t need an expensive subscription for frontier-quality AI. Its math and coding capabilities rival models costing 10x more, and it\'s free or near-free for most use cases. If you\'re cost-conscious but still want serious AI power, start here.',
+    rank: '⚡',
+    title: 'Best for Speed & Production',
+    model: 'Gemini 3 Flash',
+    modelId: 'gemini-3-flash',
+    provider: 'Google',
+    reason: 'The workhorse of the AI economy. At sub-100ms latency and 1/4th the cost of Pro, it powers real-time voice and video agents. If you need speed and volume, this is the engine.',
   },
 ];
 
@@ -71,13 +63,13 @@ export const PersonalPicks: React.FC = () => {
           className="text-center mb-16"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-color)]/10 border border-[var(--accent-color)]/30 text-[var(--accent-color)] text-sm font-medium mb-6">
-            <Star size={16} /> Editor's Picks
+            <Star size={16} /> 2026 Strategic Taxonomy
           </div>
           <h2 className={`text-4xl font-bold mb-4 ${theme === 'hacker' ? 'font-mono' : ''}`}>
-            My <span className="text-[var(--accent-color)]">Personal Recommendations</span>
+            Use-Case Driven <span className="text-[var(--accent-color)]">Recommendations</span>
           </h2>
           <p className="text-xl opacity-80 max-w-2xl mx-auto">
-            After extensively testing every major AI model in 2026, here are my honest picks for each category.
+            We reject a singular "winner." Instead, we analyze the "Best" AI based on specific specialized verticals.
           </p>
         </motion.div>
 
@@ -128,13 +120,13 @@ export const PersonalPicks: React.FC = () => {
           className="text-center mt-12"
         >
           <p className="text-sm opacity-50 mb-4">
-            These are personal opinions based on extensive real-world testing. Your ideal model depends on your specific use case.
+            The strategic advice for December 2026 is to diversify. Do not rely on a single provider.
           </p>
           <Link
             to="/models"
             className="inline-flex items-center gap-2 text-[var(--accent-color)] hover:underline font-medium"
           >
-            <Trophy size={16} /> Compare all 13 models yourself <ArrowRight size={14} />
+            <Trophy size={16} /> Explore the full landscape <ArrowRight size={14} />
           </Link>
         </motion.div>
       </div>

@@ -1,9 +1,86 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { Minus, Sparkles } from 'lucide-react';
 
+/** Tiny per-theme animated track for the motion slider */
+const MotionTrackCanvas: React.FC<{ value: number; width: number }> = ({ value, width }) => {
+  const { theme } = useTheme();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const valRef = useRef(value);
+  useEffect(() => { valRef.current = value; }, [value]);
+
+  useEffect(() => {
+    const c = canvasRef.current;
+    if (!c) return;
+    const ctx = c.getContext('2d')!;
+    c.width = width; c.height = 20;
+    let id = 0, frame = 0;
+
+    const draw = () => {
+      id = requestAnimationFrame(draw);
+      const v = valRef.current / 100;
+      if (v < 0.05) { ctx.clearRect(0, 0, c.width, c.height); return; }
+      frame++;
+      ctx.clearRect(0, 0, c.width, c.height);
+      const filled = v * c.width;
+
+      if (theme === 'rave') {
+        const h = (frame * 3) % 360;
+        for (let x = 0; x < filled; x += 3) {
+          ctx.fillStyle = `hsla(${(h + x * 4) % 360},100%,65%,0.7)`;
+          ctx.fillRect(x, 8, 2, 4);
+        }
+      } else if (theme === 'neon') {
+        const wave = Math.sin(frame * 0.06);
+        ctx.strokeStyle = `rgba(0,255,204,${0.6 + wave * 0.3})`;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let x = 0; x < filled; x++) {
+          const y = 10 + Math.sin((x + frame) * 0.15) * 2 * v;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      } else if (theme === 'hacker') {
+        ctx.fillStyle = 'rgba(0,255,0,0.7)';
+        const barW = 2, gap = 3;
+        for (let x = 0; x < filled; x += barW + gap) {
+          const h2 = (Math.sin((x + frame) * 0.2) * 3 + 3) * v;
+          ctx.fillRect(x, 10 - h2 / 2, barW, h2);
+        }
+      } else if (theme === 'toxic') {
+        const grad = ctx.createLinearGradient(0, 0, filled, 0);
+        grad.addColorStop(0, `rgba(184,255,0,${0.5 + Math.sin(frame * 0.04) * 0.3})`);
+        grad.addColorStop(1, `rgba(147,51,234,0.7)`);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 8, filled, 4);
+      } else if (theme === 'candy') {
+        const colors = ['#ec4899', '#f472b6', '#facc15', '#34d399', '#a855f7'];
+        const segW = c.width / colors.length;
+        for (let i = 0; i < colors.length; i++) {
+          const sx = i * segW;
+          if (sx > filled) break;
+          const sw = Math.min(segW, filled - sx);
+          ctx.fillStyle = colors[i];
+          ctx.globalAlpha = 0.6 + Math.sin(frame * 0.08 + i) * 0.3;
+          ctx.fillRect(sx, 8, sw, 4);
+        }
+        ctx.globalAlpha = 1;
+      } else {
+        const alpha = 0.4 + Math.sin(frame * 0.05) * 0.15 * v;
+        ctx.fillStyle = theme === 'light' ? `rgba(37,99,235,${alpha})` : `rgba(59,130,246,${alpha})`;
+        ctx.fillRect(0, 8, filled, 4);
+      }
+    };
+    id = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(id);
+  }, [theme, width]);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ width, height: 20 }} />;
+};
+
 export const MotionSlider: React.FC = () => {
   const { motionLevel, setMotionLevel } = useTheme();
+  const trackW = 80; // w-20 = 80px
 
   return (
     <div className="flex items-center gap-1.5 group" title="Animation amount">
@@ -13,17 +90,9 @@ export const MotionSlider: React.FC = () => {
         style={{ color: 'var(--accent-color)' }}
       />
       <div className="relative w-20 h-8 flex items-center">
+        <MotionTrackCanvas value={motionLevel} width={trackW} />
         <div className="absolute inset-y-0 left-0 right-0 flex items-center">
-          <div className="w-full h-1.5 rounded-full bg-[var(--secondary-color)] overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-150"
-              style={{
-                width: `${motionLevel}%`,
-                background: `linear-gradient(90deg, var(--accent-color), var(--accent-color))`,
-                opacity: 0.6 + (motionLevel / 100) * 0.4,
-              }}
-            />
-          </div>
+          <div className="w-full h-1.5 rounded-full bg-[var(--secondary-color)] overflow-hidden" />
         </div>
         <input
           type="range"

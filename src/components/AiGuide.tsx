@@ -8,33 +8,33 @@ import { useThemeAnimations } from '../hooks/useThemeAnimations';
 const steps = [
   {
     icon: MessageSquare,
-    title: "Prompt Engineering",
-    desc: "Be specific. Assign a persona. Provide context and examples. The quality of output depends entirely on the quality of input — clear, structured instructions yield dramatically better results."
+    title: "The Agentic Shift",
+    desc: "We have moved beyond the Chatbot Era. Success in 2026 isn't about prompting; it's about orchestrating reliable agents like GPT-5.3 that can pursue multi-step goals for hours without oversight."
   },
   {
     icon: Brain,
-    title: "Iterative Refinement",
-    desc: "Don't settle for the first answer. Ask follow-up questions, request self-critique, and refine your prompts based on initial outputs. The best results come from conversation, not one-shots."
+    title: "Adaptive Reasoning",
+    desc: "Don't treat all queries equally. Use Claude Opus 4.6's 'Extended Thinking' mode for complex architectural problems, and faster models for routine tasks. Balance cost against cognitive depth."
   },
   {
     icon: Target,
-    title: "Task-Specific Selection",
-    desc: "Use Claude Opus for coding, Midjourney for art, Perplexity for research. Choosing the right model for each task is as important as how you prompt it."
+    title: "Use-Case Selection",
+    desc: "Reject the 'one model fits all' myth. Use OpenAI for autonomy, Anthropic for reasoning, Gemini for physical sensing, and Llama/Mistral for sovereign privacy."
   },
   {
     icon: ShieldCheck,
-    title: "Verification & Safety",
-    desc: "AI can hallucinate confidently. Always verify facts for critical tasks. Treat AI as a brilliant but unreliable intern, not an infallible oracle."
+    title: "Sovereignty & Privacy",
+    desc: "For sensitive data, go Sovereign. Running Llama 4 locally on Apple Silicon ensures zero data exfiltration while maintaining frontier-class intelligence on your own hardware."
   },
   {
     icon: Layers,
-    title: "Multi-Model Workflows",
-    desc: "Combine models for best results — use a reasoning model to plan, a coding model to implement, and a review model to check. The future is orchestration, not single-model dependence."
+    title: "The Developer's Arsenal",
+    desc: "Abandon the text editor. Embrace AI-native environments like Cursor and Claude Code that index your codebase and run 'Shadow Workspaces' to validate code before you even see it."
   },
   {
     icon: Cpu,
-    title: "Agentic AI",
-    desc: "In 2026, AI agents can autonomously execute multi-step tasks. Learn to delegate effectively — assign issues to Copilot, schedule research with Perplexity, and let agents handle the routine."
+    title: "Memory Bandwidth",
+    desc: "Understand your hardware. Local AI is bottlenecked by memory bandwidth, not compute. Know why Apple Silicon's Unified Memory is the king of local inference in 2026."
   }
 ];
 
@@ -53,10 +53,10 @@ export const AiGuide: React.FC = () => {
           className="text-center mb-16"
         >
           <h2 className={`text-4xl font-bold mb-4 ${theme === 'hacker' ? 'font-mono' : ''}`}>
-            How to Use AI <span className="text-[var(--accent-color)]">Properly</span> in 2026
+            Core Principles of <span className="text-[var(--accent-color)]">2026</span>
           </h2>
           <p className="text-xl opacity-80 max-w-2xl mx-auto">
-            Unlock the full potential of artificial intelligence with these core principles.
+            The rules of engagement have changed. Here is how to navigate the new landscape.
           </p>
         </motion.div>
 
@@ -90,7 +90,7 @@ export const AiGuide: React.FC = () => {
             to="/ai-guide"
             className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--accent-color)] text-white rounded-full font-bold text-lg hover:brightness-110 transition-all shadow-lg shadow-[var(--accent-color)]/20"
           >
-            Read the Full AI Mastery Guide <ArrowRight size={18} />
+            Read the Developer's Arsenal Guide <ArrowRight size={18} />
           </Link>
         </motion.div>
       </div>

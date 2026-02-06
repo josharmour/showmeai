@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useThemeAnimations } from '../hooks/useThemeAnimations';
-import { Bot, Sparkles, BookOpen } from 'lucide-react';
+import { Bot, Sparkles, BookOpen, GitCompare, Play, GraduationCap } from 'lucide-react';
 
 export const Hero: React.FC = () => {
   const { theme } = useTheme();
@@ -111,7 +111,7 @@ export const Hero: React.FC = () => {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="z-10 max-w-4xl"
+        className="z-10 max-w-5xl"
       >
         <motion.div
           className="mb-8 inline-block p-6 rounded-full bg-[var(--secondary-color)]/80 backdrop-blur border-2 border-[var(--accent-color)]"
@@ -121,19 +121,22 @@ export const Hero: React.FC = () => {
         </motion.div>
 
         <motion.h1
-          className={`text-5xl md:text-7xl font-bold mb-6 ${theme === 'hacker' ? 'font-mono' : ''}`}
+          className={`text-4xl md:text-6xl font-bold mb-6 ${theme === 'hacker' ? 'font-mono' : ''}`}
           {...getTitleAnimation()}
         >
-          Master Artificial Intelligence
+          State of the Art Intelligence
         </motion.h1>
 
-        <p className="text-xl md:text-2xl mb-12 opacity-90 max-w-2xl mx-auto leading-relaxed">
-          The definitive 2026 guide to AI — learn to use AI{' '}
-          <span className="text-[var(--accent-color)] font-bold">PROPERLY</span>, discover the{' '}
-          <span className="text-[var(--accent-color)] font-bold">BEST</span> models, and explore every major provider.
+        <p className="text-xl md:text-2xl mb-4 font-semibold text-[var(--accent-color)]">
+          The Strategic Landscape of AI in Late 2026
+        </p>
+        
+        <p className="text-lg md:text-xl mb-12 opacity-90 max-w-3xl mx-auto leading-relaxed">
+          Gemini 3 Pro, Flash, and Thinking have arrived. Welcome to the <span className="font-bold">Year of the Autonomous Agent</span>.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* Primary CTAs */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -141,7 +144,7 @@ export const Hero: React.FC = () => {
             onClick={() => document.getElementById('guide')?.scrollIntoView({ behavior: 'smooth' })}
           >
             <Sparkles size={20} />
-            Start Learning
+            Read the Report
           </motion.button>
 
           <Link to="/models">
@@ -151,7 +154,41 @@ export const Hero: React.FC = () => {
               className="px-8 py-4 bg-[var(--secondary-color)] border-2 border-[var(--accent-color)] rounded-full font-bold text-lg shadow-lg flex items-center gap-2 mx-auto sm:mx-0 hover:bg-[var(--accent-color)]/10 transition-all"
             >
               <BookOpen size={20} />
-              Explore All Models
+              Explore Models
+            </motion.button>
+          </Link>
+        </div>
+
+        {/* Secondary CTAs */}
+        <div className="flex flex-wrap gap-3 justify-center">
+          <Link to="/compare">
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-5 py-2.5 bg-[var(--secondary-color)]/80 border border-[var(--accent-color)]/30 rounded-full text-sm font-medium flex items-center gap-2 hover:border-[var(--accent-color)] transition-all"
+            >
+              <GitCompare size={16} />
+              Compare Models
+            </motion.button>
+          </Link>
+          <Link to="/playground">
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-5 py-2.5 bg-[var(--secondary-color)]/80 border border-[var(--accent-color)]/30 rounded-full text-sm font-medium flex items-center gap-2 hover:border-[var(--accent-color)] transition-all"
+            >
+              <Play size={16} />
+              Playground
+            </motion.button>
+          </Link>
+          <Link to="/ai-guide">
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-5 py-2.5 bg-[var(--secondary-color)]/80 border border-[var(--accent-color)]/30 rounded-full text-sm font-medium flex items-center gap-2 hover:border-[var(--accent-color)] transition-all"
+            >
+              <GraduationCap size={16} />
+              AI Guide
             </motion.button>
           </Link>
         </div>

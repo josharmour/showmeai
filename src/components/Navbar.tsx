@@ -16,13 +16,15 @@ export const Navbar: React.FC = () => {
     { to: '/', label: 'Home' },
     { to: '/models', label: 'AI Models' },
     { to: '/providers', label: 'Providers' },
+    { to: '/compare', label: 'Compare' },
+    { to: '/playground', label: 'Playground' },
     { to: '/ai-guide', label: 'AI Guide' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[var(--bg-color)]/80 border-b border-[var(--accent-color)]/20">
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[var(--bg-color)]/80 border-b border-[var(--accent-color)]/20" role="navigation" aria-label="Main navigation">
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
         <Link to="/" className="flex items-center gap-2 font-bold text-xl group">
           <Bot size={28} className="text-[var(--accent-color)] group-hover:rotate-12 transition-transform" />
@@ -57,7 +59,7 @@ export const Navbar: React.FC = () => {
         <div className="flex md:hidden items-center gap-2">
           <MotionSlider />
           <ThemeSwitcher />
-          <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2">
+          <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2" aria-label={mobileOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileOpen}>
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -83,6 +85,17 @@ export const Navbar: React.FC = () => {
                 {link.label}
               </Link>
             ))}
+            {/* Mobile sliders */}
+            <div className="px-6 py-4 border-t border-[var(--accent-color)]/10 flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <span className="text-xs opacity-50 w-16 shrink-0">Effects</span>
+                <IntensitySlider />
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-xs opacity-50 w-16 shrink-0">Motion</span>
+                <MotionSlider />
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,0 +1,191 @@
+# AI Masterclass — Roadmap 2026
+
+> **Last Updated:** February 6, 2026  
+> **Project:** React 19 + Vite 7 + TypeScript 5.9 + Tailwind 3 + Framer Motion 12
+
+---
+
+## ✅ Completed (Archive)
+
+Everything below has been fully implemented and shipped:
+
+- 7 themes (dark, light, rave, neon, hacker, toxic, candy) with unique canvas backgrounds
+- 13 AI models + 12 providers with full essays and sub-pages
+- Compare Models side-by-side feature (`/compare`)
+- Interactive Playground with simulated responses (`/playground`)
+- "How to Use AI" guide with OMEGA-SENTINEL preset + Claude Code setup
+- Personal Picks (ranked recommendations) + Model Recommender (task-based)
+- Dual sliders: Intensity (canvas effects) + Motion Level (UI animations)
+- Per-theme animated slider tracks (rave rainbow, neon pulse, hacker scanline, etc.)
+- Code-splitting with React.lazy + Suspense on all routes
+- PWA with service worker, offline caching, and manifest
+- SEO meta tags via react-helmet-async on every route
+- Performance-optimized canvas (adaptive FPS, no shadowBlur, typed arrays, pool caps)
+- Accessibility: prefers-reduced-motion, ARIA labels, keyboard nav
+- ThemeContext optimization (useMemo, useCallback, reduced-motion auto-detect)
+- Inter + JetBrains Mono local fonts via @fontsource
+- Sitemap.xml with all routes
+
+---
+
+## ✅ Phase 1: Bug Fixes & Code Cleanup — COMPLETE
+
+All items implemented:
+
+- [x] **Deleted `dataService.ts`** — dead code, zero imports across codebase
+- [x] **Added 404 page** — styled `NotFound.tsx` with theme-aware design, popular links, `Route path="*"` catch-all
+- [x] **Fixed Hero scroll** — added `html { scroll-behavior: smooth }` with `prefers-reduced-motion` fallback
+- [x] **Hero CTA gap** — added secondary buttons for Compare, Playground, and AI Guide
+- [x] **Navbar mobile sliders** — added IntensitySlider + MotionSlider to mobile dropdown with labels
+- [x] **ModelPage/ProviderPage navigation** — already had breadcrumbs + back buttons (audited ✅)
+- [x] **Removed `clsx` + `tailwind-merge`** — unused packages uninstalled from package.json
+- [x] **Audited `providerSlug`** — all 18 models verified with correct slugs
+- [x] **Cleaned up dead code** — removed commented-out lucide imports in models.ts
+- [x] **Fixed duplicate `y: 0`** — TypeScript error in useThemeAnimations.ts
+
+---
+
+## 🎨 Phase 2: Theme Improvements
+
+### New Themes
+- [ ] **Cyberpunk theme** — chrome/orange/dark city aesthetic, glitch text effects, scanline overlay
+- [ ] **Ocean theme** — deep blue gradients, floating bubble canvas, wave animations, calm vibe
+- [ ] **Sunset theme** — warm orange/purple gradients, sun particle effects, golden glow
+- [ ] **Retro/Synthwave theme** — 80s grid lines, pink/cyan palette, CRT scanline effect
+- [ ] **Minimalist theme** — near-zero effects, pure typography focus, black/white/single accent
+
+### Theme System Enhancements
+- [ ] **Theme persistence** — save selected theme to `localStorage` so it survives page reload
+- [ ] **Theme preview tooltips** — show a mini color swatch on hover in ThemeSwitcher before selecting
+- [ ] **Theme transition effects** — crossfade between canvas backgrounds when switching themes instead of instant swap
+- [ ] **Seasonal auto-theme** — detect date and suggest seasonal themes (e.g., candy for Valentine's, hacker for Halloween)
+- [ ] **Per-theme scrollbar colors** — currently all themes use accent-color; make rave scrollbar rainbow, hacker scanline-green, etc.
+- [ ] **Per-theme cursor styles** — custom cursors for rave (crosshair glow), hacker (terminal block), candy (star)
+
+### Canvas Background Improvements
+- [ ] **Parallax depth layers** — add 2-3 depth layers to Dark (near/far stars) and Neon (foreground/background lines)
+- [ ] **Interactive backgrounds** — mouse-follow effect where particles gravitate toward cursor position
+- [ ] **Audio-reactive mode** — experimental: use Web Audio API to make rave particles pulse with music beat
+- [ ] **Canvas resolution toggle** — add a "Low/Med/High" quality selector for users on weak hardware
+
+---
+
+## 🖥️ Phase 3: UI Improvements
+
+### Navigation & Layout
+- [ ] **Sticky section navigation** — on long pages (HowToUseAI, ModelPage), add a floating table-of-contents sidebar
+- [ ] **Breadcrumbs** — show `Home > Models > Claude Opus 4.6` on all detail pages
+- [ ] **Footer redesign** — add sitemap links, theme selector, social links, "Built with" credits, last-updated date
+- [ ] **Search bar** — global search in Navbar that searches across models, providers, and guide sections (client-side fuzzy search)
+- [ ] **Keyboard shortcuts** — `Ctrl+K` for search, `T` to cycle themes, `←/→` to navigate between models
+
+### Cards & Grids
+- [ ] **Sort models** — add sort dropdown (by name, release date, provider, category) to ModelsGrid
+- [ ] **Favorites/bookmarks** — let users star models and see them in a "My Picks" section (localStorage)
+- [ ] **Card size toggle** — compact list view vs. current grid cards on ModelsGrid and ProvidersGrid
+- [ ] **Infinite scroll or pagination** — for when model count grows beyond 20+
+- [ ] **Model comparison badges** — show "⚡ Fastest", "🧠 Smartest", "💰 Cheapest" badges on cards
+
+### Animations & Polish
+- [ ] **Page transition animations** — use Framer Motion `AnimatePresence` on route changes (fade/slide between pages)
+- [ ] **Scroll progress bar** — thin accent-colored bar at top of viewport showing read progress
+- [ ] **Hover micro-interactions** — add subtle icon animations on nav links (rotate, bounce, pulse)
+- [ ] **Loading skeleton screens** — replace spinner with themed skeleton placeholders during lazy load
+- [ ] **Toast notifications** — themed toast when user copies code, bookmarks a model, or changes theme
+- [ ] **Confetti burst** — candy theme: trigger confetti animation on certain user actions
+
+---
+
+## ✨ Phase 4: New Features
+
+### Content Features
+- [ ] **AI News Feed** — curated timeline of latest AI developments (static data with dates, expandable cards)
+- [ ] **Model changelog** — version history for each model (e.g., "Opus 4.5 → 4.6: +1M context, agent teams")
+- [ ] **Benchmark dashboard** — visual chart page comparing models on SWE-bench, MMLU, HumanEval, Terminal-Bench
+- [ ] **Pricing calculator** — interactive tool: "I need X tokens/day for Y task" → shows cost comparison across providers
+- [ ] **AI Glossary** — searchable glossary of AI terms (MoE, RLHF, CoT, RAG, MCP, etc.) with hover definitions
+- [ ] **Community picks** — voting system where visitors can upvote their favorite models (localStorage-based)
+
+### Interactive Features
+- [ ] **Quiz mode** — "Which AI model should I use?" interactive questionnaire with branching logic → recommendation
+- [ ] **Playground enhancements** — multiple conversation tabs, prompt library, export conversations
+- [ ] **Model DNA comparison** — radar/spider chart visualizing model capabilities (reasoning, speed, multimodal, cost, context)
+- [ ] **Code sandbox** — embeddable code editor (Monaco) where users can test prompts against different model APIs
+- [ ] **Dark/light mode per-component** — let users mix themes (e.g., dark navbar + light content area)
+
+### Technical Features
+- [ ] **i18n** — internationalization support (English, Spanish, French, Japanese, Chinese at minimum)
+- [ ] **RSS feed** — auto-generated RSS for model updates
+- [ ] **API endpoint** — expose model data via a simple JSON API (`/api/models`, `/api/providers`) for external consumption
+- [ ] **Analytics dashboard** — track which models and pages get the most views (privacy-friendly, no cookies)
+- [ ] **Content CMS** — move model/provider essays from hardcoded TypeScript to a markdown/MDX content layer for easier editing
+- [ ] **Error boundaries** — wrap lazy routes in `<ErrorBoundary>` with themed error pages
+- [ ] **E2E tests** — add Playwright tests for critical user flows (theme switching, navigation, compare feature)
+- [ ] **Bundle analysis** — integrate `rollup-plugin-visualizer` to monitor chunk sizes
+
+---
+
+## 🚀 Phase 5: Growth & Polish
+
+### Performance
+- [ ] **Image optimization** — replace SVG PWA icons with real optimized PNGs; add WebP model provider logos
+- [ ] **Font subsetting** — subset Inter and JetBrains Mono to Latin-only to cut ~400KB of woff files
+- [ ] **Preload critical chunks** — add `<link rel="modulepreload">` for the most-visited route chunks
+- [ ] **Virtual scrolling** — implement `react-window` or `@tanstack/virtual` for model lists >50 items
+
+### Deployment
+- [ ] **CI/CD pipeline** — GitHub Actions: lint → type-check → build → deploy on push to main
+- [ ] **Staging environment** — preview deployments for PRs (Vercel/Netlify)
+- [ ] **Lighthouse CI** — automated Lighthouse audits on every PR (target: 95+ on all categories)
+- [ ] **Custom domain + SSL** — deploy to `ai-masterclass.dev` with Cloudflare CDN
+
+### Community
+- [ ] **Open-source the project** — clean up README, add contributing guide, MIT license
+- [ ] **Blog section** — `/blog` with markdown-powered posts about AI developments
+- [ ] **Newsletter signup** — email capture for weekly AI model updates
+- [ ] **Discord/community link** — add social proof and community engagement
+
+---
+
+## 📊 Current Architecture
+
+```
+src/
+├── App.tsx              # Router + lazy routes + SEO + Suspense
+├── main.tsx             # React 19 entry point
+├── index.css            # Tailwind + 7 theme CSS variables + per-theme effects
+├── components/
+│   ├── backgrounds/
+│   │   └── ThemeBackground.tsx  # 7 optimized canvas backgrounds
+│   ├── Hero.tsx                 # Landing section with theme-aware animations
+│   ├── AiGuide.tsx              # 6-card guide overview (homepage section)
+│   ├── ModelRecommender.tsx     # Task-based recommendation tabs
+│   ├── PersonalPicks.tsx        # Ranked personal recommendations
+│   ├── ModelsGrid.tsx           # Filterable model directory with layout animations
+│   ├── ModelPage.tsx            # Individual model essay page
+│   ├── ProvidersGrid.tsx        # Provider directory
+│   ├── ProviderPage.tsx         # Individual provider essay page
+│   ├── CompareModels.tsx        # Side-by-side model comparison
+│   ├── Playground.tsx           # Simulated AI chat playground
+│   ├── HowToUseAI.tsx           # 7-section AI guide + OMEGA-SENTINEL preset
+│   ├── Navbar.tsx               # Fixed nav with links + sliders + theme picker
+│   ├── IntensitySlider.tsx      # Canvas intensity (per-theme animated track)
+│   ├── MotionSlider.tsx         # Motion level (per-theme animated track)
+│   ├── ThemeSwitcher.tsx        # Theme dropdown picker
+│   ├── ScrollToTop.tsx          # Route-change scroll reset
+│   └── SEO.tsx                  # Helmet wrapper for meta tags
+├── context/
+│   └── ThemeContext.tsx          # Theme + intensity + motionLevel (memoized)
+├── hooks/
+│   └── useThemeAnimations.ts    # Per-theme Framer Motion variants (3 variant sets)
+├── data/
+│   └── models.ts                # 13 models + 12 providers (static data)
+└── services/
+    └── dataService.ts           # Data abstraction layer (currently unused)
+```
+
+**Stack:** React 19.2 · Vite 7.3 · TypeScript 5.9 · Tailwind 3.4 · Framer Motion 12.33 · react-router-dom 7 · react-helmet-async · vite-plugin-pwa · lucide-react
+
+**Routes:** `/` · `/models` · `/models/:id` · `/providers` · `/providers/:id` · `/compare` · `/playground` · `/ai-guide`
+
+**Themes:** dark · light · rave · neon · hacker · toxic · candy

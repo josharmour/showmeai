@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://ai-masterclass.dev/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://ai-masterclass.dev/models</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ai-masterclass.dev/compare</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ai-masterclass.dev/playground</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ai-masterclass.dev/ai-guide</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <!-- Models -->
+  <url><loc>https://ai-masterclass.dev/models/gpt-5</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/claude-opus-4</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/gemini-3-pro</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/grok-4</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/deepseek-v3</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/llama-4</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/midjourney-v7</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/dalle-4</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/perplexity-pro</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/github-copilot</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/stable-diffusion</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/mistral-large</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/models/qwen3</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- Providers -->
+  <url><loc>https://ai-masterclass.dev/providers/openai</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers/anthropic</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers/google</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers/xai</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers/github</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers/meta</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers/deepseek</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers/perplexity</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers/midjourney</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers/stability</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers/mistral</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-masterclass.dev/providers/alibaba</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+</urlset>

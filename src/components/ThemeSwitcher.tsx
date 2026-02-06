@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { Palette, Moon, Sun, Zap, Terminal, Music, Skull, Candy } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,11 +16,33 @@ const themes = [
 export const ThemeSwitcher: React.FC = () => {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleOpen = () => setIsOpen(!isOpen);
 
+  React.useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleEsc);
+      window.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+      window.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <button
         onClick={toggleOpen}
         className="w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 focus:outline-none ring-2 ring-[var(--accent-color)]/30 bg-[var(--secondary-color)] text-[var(--text-color)]"
@@ -38,6 +60,7 @@ export const ThemeSwitcher: React.FC = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: -10 }}
               className="absolute top-12 right-0 flex flex-col gap-1 p-2 rounded-xl bg-[var(--secondary-color)] shadow-xl border border-[var(--accent-color)]/30 z-50 min-w-[140px]"
+              style={{ contain: 'layout' }}
             >
               {themes.map((t) => (
                 <button
@@ -46,6 +69,8 @@ export const ThemeSwitcher: React.FC = () => {
                     setTheme(t.id as any);
                     setIsOpen(false);
                   }}
+                  aria-label={`Switch to ${t.name} theme`}
+                  aria-pressed={theme === t.id}
                   className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
                     theme === t.id
                       ? 'bg-[var(--accent-color)] text-white'
