@@ -71,6 +71,23 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  // Expose motion level as CSS custom properties for persistent UI animations
+  useEffect(() => {
+    const root = document.documentElement;
+    const t = motionLevel / 100;
+    root.style.setProperty('--motion-scale', t.toFixed(3));
+    root.style.setProperty('--motion-glow', `${(t * 20).toFixed(1)}px`);
+    root.style.setProperty('--motion-speed', `${(4 - t * 3.5).toFixed(2)}s`);
+    root.style.setProperty('--motion-play', t < 0.05 ? 'paused' : 'running');
+    root.style.setProperty('--motion-opacity', t.toFixed(3));
+  }, [motionLevel]);
+
+  // Expose intensity as CSS custom property
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty('--intensity-scale', (intensity / 100).toFixed(3));
+  }, [intensity]);
+
   // Check prefers-reduced-motion on mount
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

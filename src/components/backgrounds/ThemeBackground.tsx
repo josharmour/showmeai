@@ -1100,6 +1100,8 @@ const MinimalistBackground: React.FC = () => {
 /* ═══════════════ FOREST BACKGROUND ═══════════════ */
 const ForestBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const iRef = useIntensityRef();
+  const shouldPaint = useFrameThrottle(iRef);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
@@ -1114,7 +1116,8 @@ const ForestBackground: React.FC = () => {
     interface Firefly { x: number; y: number; radius: number; opacity: number; phase: number; speed: number; }
 
     const leafColors = ['#22c55e', '#16a34a', '#15803d', '#4ade80', '#86efac'];
-    const leaves: Leaf[] = Array.from({ length: 25 }, () => ({
+    const MAX_LEAVES = 50;
+    const leaves: Leaf[] = Array.from({ length: MAX_LEAVES }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height - canvas.height,
       size: 6 + Math.random() * 10,
@@ -1126,7 +1129,8 @@ const ForestBackground: React.FC = () => {
       color: leafColors[Math.floor(Math.random() * leafColors.length)],
     }));
 
-    const fireflies: Firefly[] = Array.from({ length: 30 }, () => ({
+    const MAX_FIREFLIES = 60;
+    const fireflies: Firefly[] = Array.from({ length: MAX_FIREFLIES }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       radius: 1 + Math.random() * 2,
@@ -1135,20 +1139,26 @@ const ForestBackground: React.FC = () => {
       speed: 0.2 + Math.random() * 0.5,
     }));
 
-    const draw = (time: number) => {
+    const draw = (now: number) => {
+      animId = requestAnimationFrame(draw);
+      if (!shouldPaint(now)) return;
+      const t = iRef.current / 100;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Leaves
-      for (const l of leaves) {
-        l.y += l.speedY;
-        l.x += l.speedX + Math.sin(time * 0.001 + l.rotation) * 0.3;
-        l.rotation += l.rotSpeed;
+      const visLeaves = Math.max(3, (MAX_LEAVES * t) | 0);
+      const visFireflies = Math.max(2, (MAX_FIREFLIES * t) | 0);
+
+      for (let i = 0; i < visLeaves; i++) {
+        const l = leaves[i];
+        l.y += l.speedY * (0.2 + t * 1.2);
+        l.x += l.speedX + Math.sin(now * 0.001 + l.rotation) * 0.3 * t;
+        l.rotation += l.rotSpeed * (0.3 + t);
         if (l.y > canvas.height + 20) { l.y = -20; l.x = Math.random() * canvas.width; }
 
         ctx.save();
         ctx.translate(l.x, l.y);
         ctx.rotate(l.rotation);
-        ctx.globalAlpha = l.opacity;
+        ctx.globalAlpha = l.opacity * (0.3 + t * 0.7);
         ctx.fillStyle = l.color;
         ctx.beginPath();
         ctx.ellipse(0, 0, l.size * 0.4, l.size, 0, 0, Math.PI * 2);
@@ -1156,33 +1166,33 @@ const ForestBackground: React.FC = () => {
         ctx.restore();
       }
 
-      // Fireflies
-      for (const f of fireflies) {
-        f.phase += 0.015;
-        f.opacity = 0.1 + Math.abs(Math.sin(f.phase)) * 0.6;
-        f.x += Math.sin(f.phase * 0.7) * f.speed;
-        f.y += Math.cos(f.phase * 0.5) * f.speed * 0.5;
+      for (let i = 0; i < visFireflies; i++) {
+        const f = fireflies[i];
+        f.phase += 0.015 * (0.3 + t);
+        f.opacity = (0.1 + Math.abs(Math.sin(f.phase)) * 0.6) * t;
+        f.x += Math.sin(f.phase * 0.7) * f.speed * (0.3 + t);
+        f.y += Math.cos(f.phase * 0.5) * f.speed * 0.5 * (0.3 + t);
         if (f.x < 0) f.x = canvas.width;
         if (f.x > canvas.width) f.x = 0;
         if (f.y < 0) f.y = canvas.height;
         if (f.y > canvas.height) f.y = 0;
 
         ctx.globalAlpha = f.opacity;
-        const grad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.radius * 4);
+        const glowR = f.radius * (2 + t * 3);
+        const grad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, glowR);
         grad.addColorStop(0, '#4ade80');
         grad.addColorStop(1, 'transparent');
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.arc(f.x, f.y, f.radius * 4, 0, Math.PI * 2);
+        ctx.arc(f.x, f.y, glowR, 0, Math.PI * 2);
         ctx.fill();
       }
 
       ctx.globalAlpha = 1;
-      animId = requestAnimationFrame(draw);
     };
     animId = requestAnimationFrame(draw);
     return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resize); };
-  }, []);
+  }, [iRef, shouldPaint]);
 
   return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-40" />;
 };
@@ -1190,6 +1200,8 @@ const ForestBackground: React.FC = () => {
 /* ═══════════════ MONOCHROME BACKGROUND ═══════════════ */
 const MonochromeBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const iRef = useIntensityRef();
+  const shouldPaint = useFrameThrottle(iRef);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
@@ -1201,7 +1213,8 @@ const MonochromeBackground: React.FC = () => {
     window.addEventListener('resize', resize);
 
     interface Shape { x: number; y: number; size: number; rotation: number; rotSpeed: number; type: number; opacity: number; speed: number; }
-    const shapes: Shape[] = Array.from({ length: 20 }, () => ({
+    const MAX_SHAPES = 40;
+    const shapes: Shape[] = Array.from({ length: MAX_SHAPES }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       size: 15 + Math.random() * 40,
@@ -1212,20 +1225,25 @@ const MonochromeBackground: React.FC = () => {
       speed: 0.1 + Math.random() * 0.3,
     }));
 
-    const draw = () => {
+    const draw = (now: number) => {
+      animId = requestAnimationFrame(draw);
+      if (!shouldPaint(now)) return;
+      const t = iRef.current / 100;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      for (const s of shapes) {
-        s.rotation += s.rotSpeed;
-        s.y -= s.speed;
+      const vis = Math.max(3, (MAX_SHAPES * t) | 0);
+      for (let i = 0; i < vis; i++) {
+        const s = shapes[i];
+        s.rotation += s.rotSpeed * (0.3 + t);
+        s.y -= s.speed * (0.2 + t * 1.2);
         if (s.y < -s.size * 2) { s.y = canvas.height + s.size; s.x = Math.random() * canvas.width; }
 
         ctx.save();
         ctx.translate(s.x, s.y);
         ctx.rotate(s.rotation);
-        ctx.globalAlpha = s.opacity;
+        ctx.globalAlpha = s.opacity * (0.4 + t * 0.8);
         ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 0.5 + t;
 
         if (s.type === 0) {
           ctx.strokeRect(-s.size / 2, -s.size / 2, s.size, s.size);
@@ -1235,9 +1253,9 @@ const MonochromeBackground: React.FC = () => {
           ctx.stroke();
         } else {
           ctx.beginPath();
-          for (let i = 0; i < 3; i++) {
-            const angle = (i / 3) * Math.PI * 2 - Math.PI / 2;
-            const method = i === 0 ? 'moveTo' : 'lineTo';
+          for (let j = 0; j < 3; j++) {
+            const angle = (j / 3) * Math.PI * 2 - Math.PI / 2;
+            const method = j === 0 ? 'moveTo' : 'lineTo';
             ctx[method](Math.cos(angle) * s.size / 2, Math.sin(angle) * s.size / 2);
           }
           ctx.closePath();
@@ -1247,11 +1265,10 @@ const MonochromeBackground: React.FC = () => {
       }
 
       ctx.globalAlpha = 1;
-      animId = requestAnimationFrame(draw);
     };
     animId = requestAnimationFrame(draw);
     return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resize); };
-  }, []);
+  }, [iRef, shouldPaint]);
 
   return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-30" />;
 };
@@ -1259,6 +1276,8 @@ const MonochromeBackground: React.FC = () => {
 /* ═══════════════ SYNTHWAVE X BACKGROUND ═══════════════ */
 const SynthwaveXBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const iRef = useIntensityRef();
+  const shouldPaint = useFrameThrottle(iRef);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
@@ -1270,21 +1289,24 @@ const SynthwaveXBackground: React.FC = () => {
     resize();
     window.addEventListener('resize', resize);
 
-    const draw = () => {
+    const draw = (now: number) => {
+      animId = requestAnimationFrame(draw);
+      if (!shouldPaint(now)) return;
+      const t = iRef.current / 100;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      offset += 0.5;
+      offset += 0.5 * (0.2 + t);
 
       const horizon = canvas.height * 0.55;
       const gridSpacing = 40;
-      const perspectiveDepth = 30;
+      const perspectiveDepth = Math.max(5, (30 * (0.3 + t * 0.7)) | 0);
 
-      // Horizontal grid lines (perspective)
+      // Horizontal grid lines
       ctx.strokeStyle = '#01cdfe';
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 0.5 + t;
       for (let i = 0; i < perspectiveDepth; i++) {
-        const t = i / perspectiveDepth;
-        const y = horizon + (canvas.height - horizon) * Math.pow(t, 1.5);
-        const alpha = 0.05 + t * 0.15;
+        const tt = i / perspectiveDepth;
+        const y = horizon + (canvas.height - horizon) * Math.pow(tt, 1.5);
+        const alpha = (0.05 + tt * 0.15) * (0.3 + t * 0.7);
         ctx.globalAlpha = alpha;
         ctx.beginPath();
         ctx.moveTo(0, y);
@@ -1292,12 +1314,11 @@ const SynthwaveXBackground: React.FC = () => {
         ctx.stroke();
       }
 
-      // Vertical grid lines (perspective)
-      const vertCount = 20;
+      // Vertical grid lines
+      const vertCount = Math.max(5, (20 * (0.3 + t * 0.7)) | 0);
       for (let i = -vertCount; i <= vertCount; i++) {
         const baseX = canvas.width / 2 + i * gridSpacing;
-        const t = (offset % gridSpacing) / gridSpacing;
-        ctx.globalAlpha = 0.08;
+        ctx.globalAlpha = 0.08 * (0.3 + t * 0.7);
         ctx.beginPath();
         ctx.moveTo(canvas.width / 2 + (baseX - canvas.width / 2) * 0.02, horizon);
         ctx.lineTo(baseX, canvas.height);
@@ -1306,31 +1327,43 @@ const SynthwaveXBackground: React.FC = () => {
 
       // Sun
       const sunY = horizon - 40;
-      const sunR = 60;
+      const sunR = 40 + t * 30;
       const sunGrad = ctx.createRadialGradient(canvas.width / 2, sunY, 0, canvas.width / 2, sunY, sunR * 2);
-      sunGrad.addColorStop(0, 'rgba(255,113,206,0.3)');
-      sunGrad.addColorStop(0.5, 'rgba(1,205,254,0.1)');
+      sunGrad.addColorStop(0, `rgba(255,113,206,${0.1 + t * 0.3})`);
+      sunGrad.addColorStop(0.5, `rgba(1,205,254,${0.05 + t * 0.1})`);
       sunGrad.addColorStop(1, 'transparent');
-      ctx.globalAlpha = 0.5;
+      ctx.globalAlpha = 0.3 + t * 0.4;
       ctx.fillStyle = sunGrad;
       ctx.beginPath();
       ctx.arc(canvas.width / 2, sunY, sunR * 2, 0, Math.PI * 2);
       ctx.fill();
 
-      // Sun horizontal stripes
-      ctx.globalAlpha = 0.4;
+      // Sun stripes
+      ctx.globalAlpha = (0.2 + t * 0.3);
       ctx.fillStyle = '#ff71ce';
-      for (let i = 0; i < 5; i++) {
+      const stripeCount = Math.max(2, (5 * t) | 0);
+      for (let i = 0; i < stripeCount; i++) {
         const stripeY = sunY - sunR + i * (sunR * 2 / 5);
-        ctx.fillRect(canvas.width / 2 - sunR, stripeY, sunR * 2, 2);
+        ctx.fillRect(canvas.width / 2 - sunR, stripeY, sunR * 2, 1 + t);
+      }
+
+      // Stars at high intensity
+      if (t > 0.4) {
+        const starCount = ((t - 0.4) * 50) | 0;
+        ctx.fillStyle = '#fff';
+        for (let i = 0; i < starCount; i++) {
+          const sx = (Math.sin(i * 127.1 + offset * 0.01) * 0.5 + 0.5) * canvas.width;
+          const sy = (Math.cos(i * 311.7) * 0.5 + 0.5) * horizon;
+          ctx.globalAlpha = 0.2 + Math.sin(now * 0.003 + i) * 0.15;
+          ctx.fillRect(sx, sy, 1.5, 1.5);
+        }
       }
 
       ctx.globalAlpha = 1;
-      animId = requestAnimationFrame(draw);
     };
     animId = requestAnimationFrame(draw);
     return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resize); };
-  }, []);
+  }, [iRef, shouldPaint]);
 
   return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-50" />;
 };
