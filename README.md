@@ -486,7 +486,23 @@ Edit [`models.ts`](src/data/models.ts):
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GNU General Public License v3.0** - see the [LICENSE](LICENSE) file for details.
+
+### About GPL v3
+
+The GNU General Public License is a free, copyleft license for software. The GPL ensures that:
+- Users have the freedom to use, study, share, and modify the software
+- All derivative works must also be licensed under GPL v3
+- Source code must be made available when distributing the software
+- Any distributed copies must include the same license and copyright notice
+
+**Key implications:**
+- ✅ You can freely use, modify, and distribute this software
+- ✅ You can charge for distributing the software
+- ❌ You cannot close the source or make it proprietary
+- ❌ You cannot sublicense or impose additional restrictions
+
+For more information, visit: [https://www.gnu.org/licenses/gpl-3.0.html](https://www.gnu.org/licenses/gpl-3.0.html)
 
 ---
 
