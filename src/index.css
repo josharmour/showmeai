@@ -55,10 +55,10 @@ body {
 
 /* Light Theme */
 .theme-light {
-  --bg-color: #f8fafc;
-  --text-color: #0f172a;
-  --accent-color: #2563eb;
-  --secondary-color: #e2e8f0;
+  --bg-color: #f9fafb;
+  --text-color: #111827;
+  --accent-color: #3b82f6;
+  --secondary-color: #e5e7eb;
 }
 
 /* Rave Theme */
@@ -99,11 +99,55 @@ body {
 
 /* Candy Theme */
 .theme-candy {
-  --bg-color: #fdf2f8;
-  --text-color: #4a1942;
-  --accent-color: #ec4899;
-  --secondary-color: #fce7f3;
-  font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+  --bg-color: #1a0a1e;
+  --text-color: #fce7f3;
+  --accent-color: #f472b6;
+  --secondary-color: #2d1033;
+}
+
+/* Cyberpunk Theme */
+.theme-cyberpunk {
+  --bg-color: #0c0a1a;
+  --text-color: #e0d7ff;
+  --accent-color: #ff6b2b;
+  --secondary-color: #1a1530;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Ocean Theme */
+.theme-ocean {
+  --bg-color: #0a192f;
+  --text-color: #ccd6f6;
+  --accent-color: #0ea5e9;
+  --secondary-color: #112240;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Sunset Theme */
+.theme-sunset {
+  --bg-color: #1a0a00;
+  --text-color: #fff1e6;
+  --accent-color: #f97316;
+  --secondary-color: #2d1a0e;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Retro/Synthwave Theme */
+.theme-retro {
+  --bg-color: #1a0025;
+  --text-color: #f0c0ff;
+  --accent-color: #ff2975;
+  --secondary-color: #2d0040;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Minimalist Theme */
+.theme-minimalist {
+  --bg-color: #fafafa;
+  --text-color: #18181b;
+  --accent-color: #18181b;
+  --secondary-color: #f4f4f5;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 /* Apply theme variables to body when class is on html/body */
@@ -205,16 +249,77 @@ body {
   border-color: #9333ea !important;
 }
 
-/* Candy: sweet bounce lift */
+/* Candy: neon glow lift */
 .theme-candy .theme-card {
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 0.4s ease,
               border-color 0.3s ease;
+  border-color: rgba(244, 114, 182, 0.15);
 }
 .theme-candy .theme-card:hover {
-  transform: translateY(-8px) scale(1.02) rotate(-0.5deg);
-  box-shadow: 0 12px 35px -8px #ec489944, 0 0 0 2px #ec489933;
-  border-color: #ec4899 !important;
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 0 20px -4px #f472b666, 0 0 40px -8px #a855f733, 0 8px 24px -8px #00000066;
+  border-color: #f472b6;
+}
+
+/* Cyberpunk: chrome glitch glow */
+.theme-cyberpunk .theme-card {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.3s ease,
+              border-color 0.3s ease;
+}
+.theme-cyberpunk .theme-card:hover {
+  transform: translateY(-4px) skewX(-0.5deg);
+  box-shadow: 0 0 20px #ff6b2b55, 0 0 40px #00f0ff22, 4px 4px 0 0 #ff6b2b33;
+  border-color: #ff6b2b !important;
+}
+
+/* Ocean: deep wave lift */
+.theme-ocean .theme-card {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.5s ease,
+              border-color 0.4s ease;
+}
+.theme-ocean .theme-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px -8px #0ea5e933, 0 0 0 1px #0ea5e922;
+  border-color: #0ea5e9 !important;
+}
+
+/* Sunset: warm golden glow */
+.theme-sunset .theme-card {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.4s ease,
+              border-color 0.3s ease;
+}
+.theme-sunset .theme-card:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 12px 35px -8px #f9731644, 0 0 30px #f9731622;
+  border-color: #f97316 !important;
+}
+
+/* Retro: synthwave neon edge */
+.theme-retro .theme-card {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.35s ease,
+              border-color 0.3s ease;
+}
+.theme-retro .theme-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px #ff297555, 0 0 40px #00f0ff22, 0 8px 30px -6px #ff297533;
+  border-color: #ff2975 !important;
+}
+
+/* Minimalist: clean subtle lift */
+.theme-minimalist .theme-card {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.4s ease,
+              border-color 0.3s ease;
+}
+.theme-minimalist .theme-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px -8px rgba(0,0,0,0.12);
+  border-color: #18181b !important;
 }
 
 /* ─── Theme-specific section reveal accents ─── */
@@ -293,7 +398,7 @@ body {
   border-radius: 1px;
 }
 
-/* Candy: sparkle line */
+/* Candy: neon gradient line */
 .theme-candy .theme-section {
   position: relative;
 }
@@ -303,11 +408,11 @@ body {
   bottom: 0;
   left: 10%;
   right: 10%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #ec4899, #f472b6, #a855f7, #ec4899, transparent);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #f472b6, #a855f7, #818cf8, #f472b6, transparent);
   background-size: 200% 100%;
   animation: candy-shimmer 4s ease infinite;
-  opacity: 0.5;
+  opacity: 0.4;
   border-radius: 1px;
 }
 
@@ -315,6 +420,89 @@ body {
   0% { background-position: 0% 50%; }
   100% { background-position: 200% 50%; }
 }
+
+/* Cyberpunk: glitch scanline */
+.theme-cyberpunk .theme-section { position: relative; }
+.theme-cyberpunk .theme-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff6b2b, #00f0ff, #ff6b2b, transparent);
+  background-size: 200% 100%;
+  animation: cyberpunk-glitch 2s steps(8) infinite;
+  opacity: 0.5;
+}
+@keyframes cyberpunk-glitch {
+  0% { background-position: 0% 50%; transform: translateX(0); }
+  25% { transform: translateX(2px); }
+  50% { background-position: 200% 50%; transform: translateX(-1px); }
+  75% { transform: translateX(1px); }
+  100% { background-position: 0% 50%; transform: translateX(0); }
+}
+
+/* Ocean: gentle wave line */
+.theme-ocean .theme-section { position: relative; }
+.theme-ocean .theme-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #0ea5e9, #06b6d4, #0ea5e9, transparent);
+  opacity: 0.3;
+}
+
+/* Sunset: warm gradient line */
+.theme-sunset .theme-section { position: relative; }
+.theme-sunset .theme-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f97316, #a855f7, #f97316, transparent);
+  opacity: 0.4;
+}
+
+/* Retro: pulsing synthwave line */
+.theme-retro .theme-section { position: relative; }
+.theme-retro .theme-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff2975, #00f0ff, #ff2975, transparent);
+  background-size: 200% 100%;
+  animation: retro-pulse 3s ease infinite;
+  opacity: 0.5;
+}
+@keyframes retro-pulse {
+  0% { background-position: 0% 50%; opacity: 0.3; }
+  50% { background-position: 100% 50%; opacity: 0.6; }
+  100% { background-position: 200% 50%; opacity: 0.3; }
+}
+
+/* Minimalist: thin hairline */
+.theme-minimalist .theme-section { position: relative; }
+.theme-minimalist .theme-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: #18181b;
+  opacity: 0.1;
+}
+
+/* ─── Per-theme scrollbar colors ─── */
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
@@ -368,3 +556,29 @@ body {
   border: none;
   height: 6px;
 }
+
+/* ─── Per-theme scrollbar ─── */
+.theme-rave::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #ff00ff, #00ffff, #ffff00); }
+.theme-neon::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #d946ef, #00ffcc); }
+.theme-hacker::-webkit-scrollbar-thumb { background: #00ff00; }
+.theme-toxic::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #9333ea, #b8ff00); }
+.theme-candy::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #f472b6, #a855f7, #818cf8); }
+.theme-cyberpunk::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #ff6b2b, #00f0ff); }
+.theme-ocean::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #0ea5e9, #06b6d4); }
+.theme-sunset::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #f97316, #a855f7); }
+.theme-retro::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #ff2975, #00f0ff); }
+.theme-minimalist::-webkit-scrollbar-thumb { background: #a1a1aa; }
+
+/* ─── Per-theme text selection ─── */
+.theme-dark ::selection { background: #3b82f6; color: #fff; }
+.theme-light ::selection { background: #2563eb; color: #fff; }
+.theme-rave ::selection { background: #ff00ff; color: #000; }
+.theme-neon ::selection { background: #d946ef; color: #fff; }
+.theme-hacker ::selection { background: #008f11; color: #000; }
+.theme-toxic ::selection { background: #9333ea; color: #b8ff00; }
+.theme-candy ::selection { background: #f472b6; color: #fff; }
+.theme-cyberpunk ::selection { background: #ff6b2b; color: #fff; }
+.theme-ocean ::selection { background: #0ea5e9; color: #fff; }
+.theme-sunset ::selection { background: #f97316; color: #fff; }
+.theme-retro ::selection { background: #ff2975; color: #fff; }
+.theme-minimalist ::selection { background: #18181b; color: #fff; }

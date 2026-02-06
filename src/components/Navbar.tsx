@@ -18,6 +18,7 @@ export const Navbar: React.FC = () => {
     { to: '/providers', label: 'Providers' },
     { to: '/compare', label: 'Compare' },
     { to: '/playground', label: 'Playground' },
+    { to: '/prompt-library', label: 'Prompt Library' },
     { to: '/ai-guide', label: 'AI Guide' },
   ];
 

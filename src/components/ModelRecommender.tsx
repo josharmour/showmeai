@@ -38,10 +38,10 @@ const tasks = [
     id: 'coding',
     label: 'Coding / Memory',
     icon: Code,
-    bestModel: 'Magic LFM-10M',
+    bestModel: 'Magic LTM-10M',
     bestModelId: 'magic-10m',
     alternatives: ['Claude Opus 4.6', 'GPT-5.3-Codex'],
-    desc: "The Infinite Context Coder. With a 10-million token active context, Magic LFM-10M can hold your entire repo, dependencies, and documentation in working memory, perfect for 'needle-in-a-haystack' debugging."
+    desc: "The Infinite Context Coder. With a 10-million token active context, Magic LTM-10M can hold your entire repo, dependencies, and documentation in working memory — perfect for 'needle-in-a-haystack' debugging across million-line monoliths. GPT-5.3-Codex is better for agentic execution (writing & deploying), while Magic excels at comprehension and context."
   },
   {
     id: 'creative',
@@ -92,8 +92,7 @@ export const ModelRecommender: React.FC = () => {
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          animate="visible"
           className="text-center mb-16"
         >
           <h2 className={`text-4xl font-bold mb-4 ${theme === 'hacker' ? 'font-mono' : ''}`}>
@@ -174,8 +173,7 @@ export const ModelRecommender: React.FC = () => {
         <motion.div
            variants={containerVariants}
            initial="hidden"
-           whileInView="visible"
-           viewport={{ once: true }}
+           animate="visible"
            className="text-center mt-12"
         >
           <Link

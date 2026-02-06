@@ -21,6 +21,8 @@ const ProviderPage = lazy(() => import('./components/ProviderPage').then(m => ({
 const HowToUseAI = lazy(() => import('./components/HowToUseAI').then(m => ({ default: m.HowToUseAI })));
 const CompareModels = lazy(() => import('./components/CompareModels').then(m => ({ default: m.CompareModels })));
 const Playground = lazy(() => import('./components/Playground').then(m => ({ default: m.Playground })));
+const OmegaPrompt = lazy(() => import('./components/OmegaPrompt').then(m => ({ default: m.OmegaPrompt })));
+const PromptLibrary = lazy(() => import('./components/PromptLibrary').then(m => ({ default: m.PromptLibrary })));
 const NotFound = lazy(() => import('./components/NotFound').then(m => ({ default: m.NotFound })));
 
 function LoadingSpinner() {
@@ -66,6 +68,8 @@ function App() {
                   <Route path="/ai-guide" element={<><SEO title="How to Use AI Correctly" description="Master AI with custom prompts, hooks, presets, and the OMEGA-SENTINEL configuration." path="/ai-guide" /><HowToUseAI /></>} />
                   <Route path="/compare" element={<><SEO title="Compare AI Models" description="Side-by-side comparison of any two AI models — benchmarks, pricing, strengths, and weaknesses." path="/compare" /><CompareModels /></>} />
                   <Route path="/playground" element={<><SEO title="AI Playground" description="Try out AI models with preset prompts and see simulated responses in real time." path="/playground" /><Playground /></>} />
+                  <Route path="/omega-prompt" element={<><SEO title="The Omega Prompt Setup" description="The definitive guide to setting up Claude Code with the Omega Prompt for maximum intelligence." path="/omega-prompt" /><OmegaPrompt /></>} />
+                  <Route path="/prompt-library" element={<><SEO title="Prompt Template Library" description="50+ curated prompt templates for every AI task - coding, writing, analysis, business, learning, and more." path="/prompt-library" /><PromptLibrary /></>} />
                   <Route path="*" element={<><SEO title="Page Not Found" description="The page you're looking for doesn't exist." /><NotFound /></>} />
                 </Routes>
               </Suspense>

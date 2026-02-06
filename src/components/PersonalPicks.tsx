@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useThemeAnimations } from '../hooks/useThemeAnimations';
 import { Trophy, ArrowRight, Star } from 'lucide-react';
+import { RevealCard } from './RevealCard';
 
 const picks = [
   {
@@ -58,8 +59,7 @@ export const PersonalPicks: React.FC = () => {
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          animate="visible"
           className="text-center mb-16"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-color)]/10 border border-[var(--accent-color)]/30 text-[var(--accent-color)] text-sm font-medium mb-6">
@@ -75,12 +75,9 @@ export const PersonalPicks: React.FC = () => {
 
         <div className="space-y-6">
           {picks.map((pick, index) => (
-            <motion.div
+            <RevealCard
               key={pick.modelId}
               variants={getItemVariants(index)}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
             >
               <Link
                 to={`/models/${pick.modelId}`}
@@ -107,7 +104,7 @@ export const PersonalPicks: React.FC = () => {
                   </div>
                 </div>
               </Link>
-            </motion.div>
+            </RevealCard>
           ))}
         </div>
 
@@ -115,8 +112,7 @@ export const PersonalPicks: React.FC = () => {
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate="visible"
           className="text-center mt-12"
         >
           <p className="text-sm opacity-50 mb-4">

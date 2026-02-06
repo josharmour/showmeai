@@ -144,6 +144,91 @@ function candyMotion(): ThemeMotion {
   };
 }
 
+function cyberpunkMotion(): ThemeMotion {
+  return {
+    container: {
+      hidden: { opacity: 0, y: 35, scale: 0.94 },
+      visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+    },
+    panel: {
+      hidden: { opacity: 0, y: 30, scale: 0.9 },
+      visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+      exit: { opacity: 0, y: -15, scale: 0.9, transition: { duration: 0.15, ease: 'easeIn' } },
+    },
+    staggerStep: 0.06,
+    childTransition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+    itemYMax: 40,
+  };
+}
+
+function oceanMotion(): ThemeMotion {
+  return {
+    container: {
+      hidden: { opacity: 0, y: 30 },
+      visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.34, 1.56, 0.64, 1] } },
+    },
+    panel: {
+      hidden: { opacity: 0, y: 20, scale: 0.97 },
+      visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: [0.34, 1.56, 0.64, 1] } },
+      exit: { opacity: 0, y: -10, transition: { duration: 0.2, ease: 'easeIn' } },
+    },
+    staggerStep: 0.1,
+    childTransition: { duration: 0.65, ease: [0.34, 1.56, 0.64, 1] },
+    itemYMax: 28,
+  };
+}
+
+function sunsetMotion(): ThemeMotion {
+  return {
+    container: {
+      hidden: { opacity: 0, y: 35 },
+      visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
+    },
+    panel: {
+      hidden: { opacity: 0, scale: 0.95 },
+      visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+      exit: { opacity: 0, y: -12, scale: 0.95, transition: { duration: 0.15, ease: 'easeIn' } },
+    },
+    staggerStep: 0.08,
+    childTransition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+    itemYMax: 34,
+  };
+}
+
+function retroMotion(): ThemeMotion {
+  return {
+    container: {
+      hidden: { opacity: 0, y: 40, scale: 0.9 },
+      visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 260, damping: 18 } },
+    },
+    panel: {
+      hidden: { opacity: 0, scale: 0.85 },
+      visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 280, damping: 20 } },
+      exit: { opacity: 0, y: -12, scale: 0.85, transition: { duration: 0.15, ease: 'easeIn' } },
+    },
+    staggerStep: 0.06,
+    childTransition: { type: 'spring', stiffness: 260, damping: 18 },
+    itemYMax: 44,
+  };
+}
+
+function minimalistMotion(): ThemeMotion {
+  return {
+    container: {
+      hidden: { opacity: 0, y: 16 },
+      visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+    },
+    panel: {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
+      exit: { opacity: 0, transition: { duration: 0.1, ease: 'easeIn' } },
+    },
+    staggerStep: 0.05,
+    childTransition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
+    itemYMax: 16,
+  };
+}
+
 const motionMap: Record<string, () => ThemeMotion> = {
   dark: darkMotion,
   light: lightMotion,
@@ -152,6 +237,11 @@ const motionMap: Record<string, () => ThemeMotion> = {
   hacker: hackerMotion,
   toxic: toxicMotion,
   candy: candyMotion,
+  cyberpunk: cyberpunkMotion,
+  ocean: oceanMotion,
+  sunset: sunsetMotion,
+  retro: retroMotion,
+  minimalist: minimalistMotion,
 };
 
 export function useThemeAnimations() {

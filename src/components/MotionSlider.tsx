@@ -54,7 +54,7 @@ const MotionTrackCanvas: React.FC<{ value: number; width: number }> = ({ value, 
         ctx.fillStyle = grad;
         ctx.fillRect(0, 8, filled, 4);
       } else if (theme === 'candy') {
-        const colors = ['#ec4899', '#f472b6', '#facc15', '#34d399', '#a855f7'];
+        const colors = ['#f472b6', '#a855f7', '#818cf8', '#c084fc', '#f472b6'];
         const segW = c.width / colors.length;
         for (let i = 0; i < colors.length; i++) {
           const sx = i * segW;
@@ -65,6 +65,37 @@ const MotionTrackCanvas: React.FC<{ value: number; width: number }> = ({ value, 
           ctx.fillRect(sx, 8, sw, 4);
         }
         ctx.globalAlpha = 1;
+      } else if (theme === 'cyberpunk') {
+        for (let x = 0; x < filled; x += 4) {
+          const alt = ((x + frame) % 8) < 4;
+          ctx.fillStyle = alt ? 'rgba(255,107,43,0.7)' : 'rgba(0,240,255,0.5)';
+          ctx.fillRect(x, 8, 3, 4);
+        }
+      } else if (theme === 'ocean') {
+        ctx.strokeStyle = `rgba(14,165,233,${0.5 + Math.sin(frame * 0.05) * 0.3})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        for (let x = 0; x < filled; x++) {
+          const y = 10 + Math.sin((x + frame) * 0.1) * 2 * v;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      } else if (theme === 'sunset') {
+        const grad = ctx.createLinearGradient(0, 0, filled, 0);
+        grad.addColorStop(0, 'rgba(249,115,22,0.7)');
+        grad.addColorStop(1, 'rgba(168,85,247,0.5)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 8, filled, 4);
+      } else if (theme === 'retro') {
+        const h = (frame * 2) % 360;
+        const grad = ctx.createLinearGradient(0, 0, filled, 0);
+        grad.addColorStop(0, `hsla(${(h + 330) % 360},100%,55%,0.7)`);
+        grad.addColorStop(1, `hsla(${(h + 180) % 360},100%,55%,0.7)`);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 8, filled, 4);
+      } else if (theme === 'minimalist') {
+        ctx.fillStyle = `rgba(161,161,170,${0.25 + v * 0.3})`;
+        ctx.fillRect(0, 9, filled, 2);
       } else {
         const alpha = 0.4 + Math.sin(frame * 0.05) * 0.15 * v;
         ctx.fillStyle = theme === 'light' ? `rgba(37,99,235,${alpha})` : `rgba(59,130,246,${alpha})`;

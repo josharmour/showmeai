@@ -1,0 +1,1251 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   PROMPT TEMPLATE LIBRARY - 50+ Curated Prompts for Every AI Use Case
+   Organized by category with clear descriptions and copyable templates
+──────────────────────────────────────────────────────────────────────────── */
+
+export interface PromptCategory {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+  color: string;
+}
+
+export interface PromptTemplate {
+  id: string;
+  categoryId: string;
+  title: string;
+  description: string;
+  tags: string[];
+  template: string;
+  variables?: string[];
+}
+
+/* ─── CATEGORIES ─── */
+export const PROMPT_CATEGORIES: PromptCategory[] = [
+  {
+    id: 'coding',
+    name: 'Coding & Development',
+    icon: 'Code',
+    description: 'Debug, refactor, explain, and generate code across all languages',
+    color: '#3b82f6',
+  },
+  {
+    id: 'writing',
+    name: 'Writing & Content',
+    icon: 'PenTool',
+    description: 'Create, edit, and improve written content of all kinds',
+    color: '#ec4899',
+  },
+  {
+    id: 'analysis',
+    name: 'Analysis & Research',
+    icon: 'Search',
+    description: 'Analyze data, summarize documents, and conduct research',
+    color: '#8b5cf6',
+  },
+  {
+    id: 'business',
+    name: 'Business & Strategy',
+    icon: 'Briefcase',
+    description: 'Strategic planning, decision-making, and business operations',
+    color: '#f59e0b',
+  },
+  {
+    id: 'learning',
+    name: 'Learning & Education',
+    icon: 'GraduationCap',
+    description: 'Teach, explain, and learn any topic effectively',
+    color: '#10b981',
+  },
+  {
+    id: 'creative',
+    name: 'Creative & Brainstorming',
+    icon: 'Lightbulb',
+    description: 'Generate ideas, stories, and creative content',
+    color: '#f43f5e',
+  },
+  {
+    id: 'productivity',
+    name: 'Productivity & Workflow',
+    icon: 'Zap',
+    description: 'Automate tasks, manage time, and boost efficiency',
+    color: '#06b6d4',
+  },
+  {
+    id: 'communication',
+    name: 'Communication',
+    icon: 'MessageSquare',
+    description: 'Draft emails, messages, and improve communication',
+    color: '#6366f1',
+  },
+];
+
+/* ─── PROMPT TEMPLATES ─── */
+export const PROMPT_TEMPLATES: PromptTemplate[] = [
+  // ═══════════════════════════════════════════════════════════════
+  // CODING & DEVELOPMENT
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'code-explain',
+    categoryId: 'coding',
+    title: 'Explain Code',
+    description: 'Get a detailed breakdown of what code does',
+    tags: ['explain', 'beginner', 'code-review'],
+    template: `Please explain this code in detail:
+
+\`\`\`language
+// Paste your code here
+\`\`\`
+
+Break down:
+1. What the code does overall
+2. Each important line/function
+3. The logic flow
+4. Any potential issues or improvements`,
+    variables: ['language', 'code'],
+  },
+  {
+    id: 'code-debug',
+    categoryId: 'coding',
+    title: 'Debug Code',
+    description: 'Find and fix bugs in your code',
+    tags: ['debug', 'fix', 'troubleshoot'],
+    template: `I'm getting this error:
+<error_message>
+// Paste error here
+</error_message>
+
+Here's my code:
+\`\`\`language
+// Paste your code here
+\`\`\`
+
+Please:
+1. Identify the root cause
+2. Explain why it's happening
+3. Provide the fix
+4. Suggest how to prevent similar errors`,
+    variables: ['error_message', 'language', 'code'],
+  },
+  {
+    id: 'code-refactor',
+    categoryId: 'coding',
+    title: 'Refactor Code',
+    description: 'Improve code quality and maintainability',
+    tags: ['refactor', 'clean-code', 'optimization'],
+    template: `Please refactor this code for better:
+- Readability
+- Maintainability
+- Performance
+- Best practices
+
+\`\`\`language
+// Paste your code here
+\`\`\`
+
+Show the refactored version and explain each change.`,
+    variables: ['language', 'code'],
+  },
+  {
+    id: 'code-translate',
+    categoryId: 'coding',
+    title: 'Translate Between Languages',
+    description: 'Convert code from one programming language to another',
+    tags: ['translation', 'polyglot'],
+    template: `Convert this FROM_LANGUAGE code to TO_LANGUAGE:
+
+\`\`\`FROM_LANGUAGE
+// Paste your code here
+\`\`\`
+
+Maintain the same functionality and follow TO_LANGUAGE best practices.`,
+    variables: ['FROM_LANGUAGE', 'TO_LANGUAGE', 'code'],
+  },
+  {
+    id: 'code-add-tests',
+    categoryId: 'coding',
+    title: 'Generate Unit Tests',
+    description: 'Create comprehensive unit tests for your code',
+    tags: ['testing', 'tdd', 'coverage'],
+    template: `Generate comprehensive unit tests for this code:
+
+\`\`\`language
+// Paste your code here
+\`\`\`
+
+Include:
+- Happy path tests
+- Edge cases
+- Error handling
+- Mock setup if needed`,
+    variables: ['language', 'code'],
+  },
+  {
+    id: 'code-api-design',
+    categoryId: 'coding',
+    title: 'Design API Endpoint',
+    description: 'Design RESTful or GraphQL API endpoints',
+    tags: ['api', 'backend', 'design'],
+    template: `Help me design an API for: RESOURCE
+
+Requirements:
+REQUIREMENTS
+
+Provide:
+1. Endpoint definitions (method, path, params)
+2. Request/response schemas
+3. Error handling approach
+4. Authentication requirements
+5. Rate limiting considerations`,
+    variables: ['RESOURCE', 'REQUIREMENTS'],
+  },
+  {
+    id: 'code-code-review',
+    categoryId: 'coding',
+    title: 'Code Review',
+    description: 'Get a thorough code review with actionable feedback',
+    tags: ['review', 'feedback', 'best-practices'],
+    template: `Please review this code:
+
+\`\`\`language
+// Paste your code here
+\`\`\`
+
+Provide feedback on:
+1. Code quality and style
+2. Potential bugs or issues
+3. Performance concerns
+4. Security vulnerabilities
+5. Best practices violations
+6. Suggestions for improvement`,
+    variables: ['language', 'code'],
+  },
+  {
+    id: 'code-sql-query',
+    categoryId: 'coding',
+    title: 'Write SQL Query',
+    description: 'Generate SQL queries for database operations',
+    tags: ['sql', 'database', 'query'],
+    template: `Write a SQL query for: DESCRIPTION
+
+Database schema:
+SCHEMA
+
+Provide:
+1. The optimized query
+2. Explanation of how it works
+3. Any indexes that would help performance`,
+    variables: ['DESCRIPTION', 'SCHEMA'],
+  },
+  {
+    id: 'code-regex',
+    categoryId: 'coding',
+    title: 'Generate Regex Pattern',
+    description: 'Create and explain regular expressions',
+    tags: ['regex', 'pattern', 'validation'],
+    template: `Create a regex pattern for: DESCRIPTION
+
+Requirements:
+REQUIREMENTS
+
+Provide:
+1. The regex pattern
+2. Explanation of each part
+3. Test cases that match and don't match`,
+    variables: ['DESCRIPTION', 'REQUIREMENTS'],
+  },
+  {
+    id: 'code-git-commit',
+    categoryId: 'coding',
+    title: 'Write Git Commit Message',
+    description: 'Generate clear, conventional commit messages',
+    tags: ['git', 'commit', 'conventional-commits'],
+    template: `Generate a conventional commit message for these changes:
+
+\`\`\`diff
+// Paste git diff here
+\`\`\`
+
+Format: <type>(<scope>): <description>
+
+Provide:
+1. The commit message (following conventional commits)
+2. A more detailed body if needed
+3. Any breaking changes`,
+    variables: ['diff'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // WRITING & CONTENT
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'write-blog-post',
+    categoryId: 'writing',
+    title: 'Write Blog Post',
+    description: 'Create engaging blog posts on any topic',
+    tags: ['blog', 'article', 'content'],
+    template: `Write a blog post about: TOPIC
+
+Target audience: AUDIENCE
+Tone: TONE
+Length: LENGTH words
+
+Include:
+1. Compelling headline
+2. Engaging introduction
+3. Main body with subheadings
+4. Practical examples
+5. Strong conclusion with CTA`,
+    variables: ['TOPIC', 'AUDIENCE', 'TONE', 'LENGTH'],
+  },
+  {
+    id: 'write-edit-improve',
+    categoryId: 'writing',
+    title: 'Improve Writing',
+    description: 'Enhance clarity, grammar, and style of any text',
+    tags: ['edit', 'proofread', 'improve'],
+    template: `Please improve this text:
+
+<Text>
+YOUR_TEXT
+</Text>
+
+Focus on:
+1. Clarity and readability
+2. Grammar and spelling
+3. Flow and structure
+4. Active voice
+5. Removing unnecessary words
+
+Show the improved version and highlight key changes.`,
+    variables: ['YOUR_TEXT'],
+  },
+  {
+    id: 'write-headline',
+    categoryId: 'writing',
+    title: 'Generate Headlines',
+    description: 'Create catchy headlines for your content',
+    tags: ['headline', 'title', 'copywriting'],
+    template: `Generate 10 compelling headlines for: CONTENT
+
+Topic: TOPIC
+Target audience: AUDIENCE
+
+Provide a mix of:
+- How-to headlines
+- Listicle headlines
+- Question headlines
+- Emotional hooks
+- Curiosity-driven headlines`,
+    variables: ['CONTENT', 'TOPIC', 'AUDIENCE'],
+  },
+  {
+    id: 'write-social-post',
+    categoryId: 'writing',
+    title: 'Write Social Media Post',
+    description: 'Create engaging posts for any social platform',
+    tags: ['social', 'twitter', 'linkedin'],
+    template: `Write a PLATFORM post about: TOPIC
+
+Goal: GOAL
+Tone: TONE
+
+Include:
+1. Hook to grab attention
+2. Main message or value
+3. Relevant hashtags
+4. Call to action
+5. Emoji if appropriate for the platform`,
+    variables: ['PLATFORM', 'TOPIC', 'GOAL', 'TONE'],
+  },
+  {
+    id: 'write-outline',
+    categoryId: 'writing',
+    title: 'Create Content Outline',
+    description: 'Structure long-form content before writing',
+    tags: ['outline', 'structure', 'planning'],
+    template: `Create a detailed outline for: TOPIC
+
+Content type: TYPE
+Target length: LENGTH
+Target audience: AUDIENCE
+
+Include:
+1. Working title
+2. Introduction points
+3. Main sections with subsections
+4. Key points per section
+5. Conclusion elements
+6. Suggested word count per section`,
+    variables: ['TOPIC', 'TYPE', 'LENGTH', 'AUDIENCE'],
+  },
+  {
+    id: 'write-product-description',
+    categoryId: 'writing',
+    title: 'Write Product Description',
+    description: 'Persuasive product copy that sells',
+    tags: ['copywriting', 'product', 'sales'],
+    template: `Write a product description for: PRODUCT
+
+Key features: FEATURES
+Target audience: AUDIENCE
+Unique selling point: USP
+
+Create:
+1. Compelling headline
+2. Benefits-focused description
+3. Feature bullets with explanations
+4. Social proof suggestion
+5. Call to action`,
+    variables: ['PRODUCT', 'FEATURES', 'AUDIENCE', 'USP'],
+  },
+  {
+    id: 'write-video-script',
+    categoryId: 'writing',
+    title: 'Write Video Script',
+    description: 'Scripts for YouTube, tutorials, or presentations',
+    tags: ['video', 'script', 'youtube'],
+    template: `Write a VIDEO_TYPE script about: TOPIC
+
+Target duration: DURATION
+Target audience: AUDIENCE
+Style: STYLE
+
+Format:
+[Scene heading]
+Visual description / action
+Dialogue/narration
+
+Include:
+1. Hook in first 30 seconds
+2. Main content sections
+3. Visual/overlay suggestions
+4. Engaging conclusion
+5. CTA for engagement`,
+    variables: ['VIDEO_TYPE', 'TOPIC', 'DURATION', 'AUDIENCE', 'STYLE'],
+  },
+  {
+    id: 'write-newsletter',
+    categoryId: 'writing',
+    title: 'Write Newsletter Email',
+    description: 'Engaging email newsletters for subscribers',
+    tags: ['email', 'newsletter', 'marketing'],
+    template: `Write a newsletter about: TOPIC
+
+Sender: SENDER
+Recipient: AUDIENCE
+Goal: GOAL
+
+Include:
+1. Compelling subject line (3 options)
+2. Preview text
+3. Personal opening
+4. Main content with scannable sections
+5. Clear CTA
+6. Professional sign-off`,
+    variables: ['TOPIC', 'SENDER', 'AUDIENCE', 'GOAL'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // ANALYSIS & RESEARCH
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'analyze-summarize',
+    categoryId: 'analysis',
+    title: 'Summarize Text',
+    description: 'Condense long documents into key points',
+    tags: ['summary', 'extract', 'condense'],
+    template: `Please summarize this text:
+
+<Text>
+LONG_TEXT
+</Text>
+
+Provide:
+1. One-sentence summary
+2. 3-5 key bullet points
+3. Main conclusions
+4. Action items (if applicable)
+5. Important details to remember`,
+    variables: ['LONG_TEXT'],
+  },
+  {
+    id: 'analyze-sentiment',
+    categoryId: 'analysis',
+    title: 'Analyze Sentiment',
+    description: 'Determine emotional tone and sentiment of text',
+    tags: ['sentiment', 'emotion', 'opinion'],
+    template: `Analyze the sentiment of this text:
+
+<Text>
+TEXT
+</Text>
+
+Provide:
+1. Overall sentiment (positive/negative/neutral)
+2. Confidence level
+3. Emotional indicators found
+4. Key phrases that drive sentiment
+5. Potential audience reaction`,
+    variables: ['TEXT'],
+  },
+  {
+    id: 'analyze-competitive',
+    categoryId: 'analysis',
+    title: 'Competitive Analysis',
+    description: 'Compare products, services, or strategies',
+    tags: ['competition', 'comparison', 'market'],
+    template: `Conduct a competitive analysis for: PRODUCT_OR_SERVICE
+
+Competitors: COMPETITORS
+
+Analyze:
+1. Feature comparison
+2. Pricing comparison
+3. Strengths vs weaknesses
+4. Market positioning
+5. Opportunities for differentiation
+6. Recommendations`,
+    variables: ['PRODUCT_OR_SERVICE', 'COMPETITORS'],
+  },
+  {
+    id: 'analyze-swot',
+    categoryId: 'analysis',
+    title: 'SWOT Analysis',
+    description: 'Strategic planning framework for any situation',
+    tags: ['swot', 'strategy', 'planning'],
+    template: `Perform a SWOT analysis for: SUBJECT
+
+Context: CONTEXT
+
+Provide detailed:
+- **Strengths**: Internal advantages and capabilities
+- **Weaknesses**: Internal limitations and challenges
+- **Opportunities**: External possibilities and trends
+- **Threats**: External risks and challenges
+
+Include strategic implications for each.`,
+    variables: ['SUBJECT', 'CONTEXT'],
+  },
+  {
+    id: 'analyze-research',
+    categoryId: 'analysis',
+    title: 'Research Assistant',
+    description: 'Help gather and synthesize information on any topic',
+    tags: ['research', 'information', 'synthesis'],
+    template: `Help me research: TOPIC
+
+Research goals: GOALS
+
+Provide:
+1. Key concepts and definitions
+2. Main schools of thought
+3. Current consensus/debates
+4. Recent developments
+5. Reliable sources for deeper reading
+6. Suggested next steps for research`,
+    variables: ['TOPIC', 'GOALS'],
+  },
+  {
+    id: 'analyze-data-insights',
+    categoryId: 'analysis',
+    title: 'Extract Data Insights',
+    description: 'Find patterns and insights in raw data',
+    tags: ['data', 'insights', 'analytics'],
+    template: `Analyze this data for insights:
+
+<Data>
+DATA
+</Data>
+
+Context: CONTEXT
+
+Provide:
+1. Key patterns identified
+2. Notable outliers
+3. Trends over time (if applicable)
+4. Correlations between variables
+5. Actionable insights
+6. Recommendations for further analysis`,
+    variables: ['DATA', 'CONTEXT'],
+  },
+  {
+    id: 'analyze-pro-con',
+    categoryId: 'analysis',
+    title: 'Pros and Cons List',
+    description: 'Weigh options for decision-making',
+    tags: ['decision', 'pros-cons', 'evaluation'],
+    template: `Analyze the pros and cons of: DECISION
+
+Context: CONTEXT
+
+Provide:
+1. Detailed pros list with explanations
+2. Detailed cons list with explanations
+3. Neutral assessment
+4. Risk level
+5. Recommendation based on the analysis`,
+    variables: ['DECISION', 'CONTEXT'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // BUSINESS & STRATEGY
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'business-okr',
+    categoryId: 'business',
+    title: 'Create OKRs',
+    description: 'Objectives and Key Results for goal setting',
+    tags: ['okr', 'goals', 'planning'],
+    template: `Create OKRs for: DEPARTMENT_OR_TEAM
+
+Time period: PERIOD
+Overall goal: GOAL
+
+Provide 3-5 objectives, each with:
+- Objective statement (inspiring, qualitative)
+- 3-4 key results (measurable, time-bound)
+- Progress metrics
+- Owner/responsibility`,
+    variables: ['DEPARTMENT_OR_TEAM', 'PERIOD', 'GOAL'],
+  },
+  {
+    id: 'business-prd',
+    categoryId: 'business',
+    title: 'Write Product Requirements',
+    description: 'PRD template for new features or products',
+    tags: ['prd', 'product', 'requirements'],
+    template: `Create a PRD for: FEATURE_OR_PRODUCT
+
+Problem statement: PROBLEM
+Target users: USERS
+
+Include:
+1. Problem statement
+2. Success metrics
+3. User stories
+4. Functional requirements
+5. Non-functional requirements
+6. Dependencies/risks
+7. Release criteria`,
+    variables: ['FEATURE_OR_PRODUCT', 'PROBLEM', 'USERS'],
+  },
+  {
+    id: 'business-meeting-agenda',
+    categoryId: 'business',
+    title: 'Create Meeting Agenda',
+    description: 'Structured, productive meeting plans',
+    tags: ['meeting', 'agenda', 'productivity'],
+    template: `Create a meeting agenda for: MEETING_TYPE
+
+Purpose: PURPOSE
+Duration: DURATION
+Attendees: ATTENDEES
+
+Provide:
+1. Clear meeting objective
+2. Agenda items with time allocations
+3. Pre-meeting preparation (if any)
+4. Expected outcomes
+5. Follow-up actions template`,
+    variables: ['MEETING_TYPE', 'PURPOSE', 'DURATION', 'ATTENDEES'],
+  },
+  {
+    id: 'business-strategy',
+    categoryId: 'business',
+    title: 'Develop Strategy',
+    description: 'Strategic planning for business initiatives',
+    tags: ['strategy', 'planning', 'execution'],
+    template: `Help develop a strategy for: INITIATIVE
+
+Current situation: CONTEXT
+Goals: GOALS
+Constraints: CONSTRAINTS
+
+Provide:
+1. Vision statement
+2. Strategic objectives
+3. Key initiatives
+4. Resource requirements
+5. Timeline/phases
+6. Success metrics (KPIs)
+7. Risk mitigation`,
+    variables: ['INITIATIVE', 'CONTEXT', 'GOALS', 'CONSTRAINTS'],
+  },
+  {
+    id: 'business-pricing',
+    categoryId: 'business',
+    title: 'Pricing Strategy',
+    description: 'Determine optimal pricing for products/services',
+    tags: ['pricing', 'revenue', 'strategy'],
+    template: `Develop a pricing strategy for: PRODUCT_OR_SERVICE
+
+Costs: COSTS
+Market: MARKET
+Competitors: COMPETITORS
+
+Provide:
+1. Recommended pricing model
+2. Price tiers (if applicable)
+3. Value justification
+4. Promotional pricing ideas
+5. Long-term pricing evolution`,
+    variables: ['PRODUCT_OR_SERVICE', 'COSTS', 'MARKET', 'COMPETITORS'],
+  },
+  {
+    id: 'business-email-professional',
+    categoryId: 'business',
+    title: 'Write Professional Email',
+    description: 'Polished business communication',
+    tags: ['email', 'professional', 'communication'],
+    template: `Write a professional email for: PURPOSE
+
+Recipient: RECIPIENT
+Context: CONTEXT
+Desired outcome: OUTCOME
+
+Include:
+1. Clear subject line
+2. Professional greeting
+3. Concise body
+4. Clear next steps/CTA
+5. Professional sign-off`,
+    variables: ['PURPOSE', 'RECIPIENT', 'CONTEXT', 'OUTCOME'],
+  },
+  {
+    id: 'business-feedback',
+    categoryId: 'business',
+    title: 'Give Constructive Feedback',
+    description: 'Professional feedback frameworks',
+    tags: ['feedback', 'management', 'communication'],
+    template: `Help me give feedback to: RECIPIENT
+
+Situation: SITUATION
+Issue: ISSUE
+Relationship: RELATIONSHIP
+
+Draft feedback using:
+1. Specific examples
+2. Impact explanation
+3. Constructive suggestions
+4. Collaborative approach
+5. Supportive tone`,
+    variables: ['RECIPIENT', 'SITUATION', 'ISSUE', 'RELATIONSHIP'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // LEARNING & EDUCATION
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'learn-explain-like-im-five',
+    categoryId: 'learning',
+    title: 'Explain Like I\'m Five (ELI5)',
+    description: 'Simple explanations for complex topics',
+    tags: ['eli5', 'simple', 'beginner'],
+    template: `Explain TOPIC like I'm five years old.
+
+Use:
+- Simple words
+- Relatable analogies
+- Short sentences
+- Fun examples
+
+Make it engaging and easy to understand.`,
+    variables: ['TOPIC'],
+  },
+  {
+    id: 'learn-deep-dive',
+    categoryId: 'learning',
+    title: 'Deep Dive Explanation',
+    description: 'Comprehensive exploration of any topic',
+    tags: ['deep-dive', 'comprehensive', 'expert'],
+    template: `Give me a comprehensive explanation of: TOPIC
+
+My level: LEVEL
+Goal: GOAL
+
+Include:
+1. Overview and context
+2. Key concepts and terminology
+3. How it works (technical details)
+4. Real-world applications
+5. Common misconceptions
+6. Further learning resources
+7. Practice suggestions`,
+    variables: ['TOPIC', 'LEVEL', 'GOAL'],
+  },
+  {
+    id: 'learn-study-plan',
+    categoryId: 'learning',
+    title: 'Create Study Plan',
+    description: 'Structured learning path for any skill',
+    tags: ['study', 'learning-path', 'curriculum'],
+    template: `Create a study plan for: SKILL_OR_TOPIC
+
+Time commitment: HOURS_PER_WEEK hours/week
+Duration: WEEKS weeks
+Current level: CURRENT_LEVEL
+Target level: TARGET_LEVEL
+
+Provide:
+1. Learning objectives by week
+2. Resources to use
+3. Practice exercises
+4. Milestone checkpoints
+5. Assessment methods`,
+    variables: ['SKILL_OR_TOPIC', 'HOURS_PER_WEEK', 'WEEKS', 'CURRENT_LEVEL', 'TARGET_LEVEL'],
+  },
+  {
+    id: 'learn-flashcards',
+    categoryId: 'learning',
+    title: 'Generate Flashcards',
+    description: 'Q&A cards for memorization and study',
+    tags: ['flashcards', 'memorization', 'study'],
+    template: `Generate flashcards for: TOPIC
+
+Difficulty: LEVEL
+Number of cards: COUNT
+
+Format as:
+[FRONT]
+Question or term
+
+[BACK]
+Answer or definition
+
+Include a mix of:
+- Definitions
+- Facts
+- Concepts
+- Applications`,
+    variables: ['TOPIC', 'LEVEL', 'COUNT'],
+  },
+  {
+    id: 'learn-quiz',
+    categoryId: 'learning',
+    title: 'Generate Quiz Questions',
+    description: 'Test knowledge with custom quizzes',
+    tags: ['quiz', 'test', 'assessment'],
+    template: `Generate a quiz for: TOPIC
+
+Difficulty: LEVEL
+Number of questions: COUNT
+Question types: TYPES
+
+Include:
+- Mix of multiple choice and short answer
+- Answer key
+- Explanations for each answer
+- Difficulty rating per question`,
+    variables: ['TOPIC', 'LEVEL', 'COUNT', 'TYPES'],
+  },
+  {
+    id: 'learn-analogy',
+    categoryId: 'learning',
+    title: 'Create Analogies',
+    description: 'Explain concepts using relatable comparisons',
+    tags: ['analogy', 'metaphor', 'explanation'],
+    template: `Create analogies to explain: CONCEPT
+
+Target audience: AUDIENCE
+
+Provide 3-5 different analogies that:
+- Use familiar, everyday concepts
+- Highlight different aspects of CONCEPT
+- Are easy to visualize
+- Include limitations of each analogy`,
+    variables: ['CONCEPT', 'AUDIENCE'],
+  },
+  {
+    id: 'learn-common-mistakes',
+    categoryId: 'learning',
+    title: 'Identify Common Mistakes',
+    description: 'Learn what NOT to do',
+    tags: ['mistakes', 'tips', 'best-practices'],
+    template: `What are common mistakes when learning: SKILL_OR_TOPIC
+
+My level: LEVEL
+
+Provide:
+1. Top 10 mistakes beginners make
+2. Why each mistake happens
+3. How to avoid it
+4. Correct approach instead
+5. Recovery tips if you've made the mistake`,
+    variables: ['SKILL_OR_TOPIC', 'LEVEL'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // CREATIVE & BRAINSTORMING
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'creative-brainstorm',
+    categoryId: 'creative',
+    title: 'Brainstorm Ideas',
+    description: 'Generate diverse ideas on any topic',
+    tags: ['brainstorm', 'ideas', 'creative'],
+    template: `Brainstorm ideas for: TOPIC
+
+Context: CONTEXT
+Quantity: COUNT ideas
+
+Provide a diverse mix including:
+- Safe/obvious ideas
+- Creative/unconventional ideas
+- Stretch/bold ideas
+- Quick wins vs long plays
+
+Format each idea with a brief explanation.`,
+    variables: ['TOPIC', 'CONTEXT', 'COUNT'],
+  },
+  {
+    id: 'creative-story',
+    categoryId: 'creative',
+    title: 'Write Story',
+    description: 'Creative fiction writing',
+    tags: ['story', 'fiction', 'creative-writing'],
+    template: `Write a GENRE story about: PROMPT
+
+Length: LENGTH words
+Style: STYLE
+
+Include:
+1. Engaging opening
+2. Well-developed characters
+3. Clear plot structure
+4. Vivid descriptions
+5. Satisfying conclusion`,
+    variables: ['GENRE', 'PROMPT', 'LENGTH', 'STYLE'],
+  },
+  {
+    id: 'creative-name-generator',
+    categoryId: 'creative',
+    title: 'Generate Names',
+    description: 'Creative names for projects, products, characters',
+    tags: ['naming', 'branding', 'creative'],
+    template: `Generate names for: WHAT_NEEDS_NAMING
+
+Vibe: VIBE
+Industry: INDUSTRY
+
+Provide 20 options across:
+- Descriptive names
+- Abstract/evocative names
+- Playful/creative names
+- Professional names
+- Acronyms/portmanteaus
+
+Check for obvious conflicts.`,
+    variables: ['WHAT_NEEDS_NAMING', 'VIBE', 'INDUSTRY'],
+  },
+  {
+    id: 'creative-prompt-generator',
+    categoryId: 'creative',
+    title: 'Creative Prompt Generator',
+    description: 'Generate prompts for creative work',
+    tags: ['prompt', 'creative', 'inspiration'],
+    template: `Generate creative prompts for: MEDIUM
+
+Theme: THEME
+Difficulty: LEVEL
+
+Provide 10 unique prompts that:
+- Are specific enough to start with
+- Are open enough for creative interpretation
+- Include different angles/approaches
+- Suggest constraints for creativity`,
+    variables: ['MEDIUM', 'THEME', 'LEVEL'],
+  },
+  {
+    id: 'creative-mashup',
+    categoryId: 'creative',
+    title: 'Concept Mashup',
+    description: 'Combine unrelated concepts for new ideas',
+    tags: ['mashup', 'innovation', 'combination'],
+    template: `Combine these two unrelated concepts: CONCEPT1 + CONCEPT2
+
+Generate:
+1. What they have in common
+2. How they could complement each other
+3. 5 new concept mashups
+4. The most promising combination with details`,
+    variables: ['CONCEPT1', 'CONCEPT2'],
+  },
+  {
+    id: 'creative-what-if',
+    categoryId: 'creative',
+    title: 'What-If Scenarios',
+    description: 'Explore alternative possibilities',
+    tags: ['what-if', 'scenarios', 'speculation'],
+    template: `Explore the scenario: "What if WHAT_IF?"
+
+Analyze:
+1. Immediate consequences
+2. Ripple effects
+3. Long-term implications
+4. Winners and losers
+5. Unintended consequences
+6. How to prepare (positive or negative)`,
+    variables: ['WHAT_IF'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // PRODUCTIVITY & WORKFLOW
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'productivity-prioritize',
+    categoryId: 'productivity',
+    title: 'Prioritize Tasks',
+    description: 'Apply prioritization frameworks to your tasks',
+    tags: ['priority', 'eisenhower', 'productivity'],
+    template: `Help me prioritize these tasks:
+
+<TASKS>
+TASK_LIST
+</TASKS>
+
+Context: CONTEXT
+
+Apply:
+1. Eisenhower Matrix (urgent/important)
+2. MoSCoW method (must/should/could/won't)
+3. Effort vs Impact analysis
+4. Recommended order with reasoning`,
+    variables: ['TASK_LIST', 'CONTEXT'],
+  },
+  {
+    id: 'productivity-break-down',
+    categoryId: 'productivity',
+    title: 'Break Down Tasks',
+    description: 'Decompose complex tasks into manageable steps',
+    tags: ['breakdown', 'planning', 'steps'],
+    template: `Break down this task into steps:
+
+Task: TASK
+
+Provide:
+1. Clear goal statement
+2. Prerequisites/dependencies
+3. Step-by-step breakdown
+4. Estimated time per step
+5. Definition of done
+6. Potential blockers and how to address`,
+    variables: ['TASK'],
+  },
+  {
+    id: 'productivity-automation',
+    categoryId: 'productivity',
+    title: 'Automation Ideas',
+    description: 'Identify tasks that can be automated',
+    tags: ['automation', 'efficiency', 'tools'],
+    template: `Suggest automations for: WORKFLOW_OR_PROCESS
+
+Current tools: TOOLS
+Technical comfort: LEVEL
+
+Provide:
+1. Tasks that can be automated
+2. Tools/services to use
+3. Implementation approach
+4. Expected time savings
+5. Quick wins vs complex automations`,
+    variables: ['WORKFLOW_OR_PROCESS', 'TOOLS', 'LEVEL'],
+  },
+  {
+    id: 'productivity-meeting-template',
+    categoryId: 'productivity',
+    title: 'Meeting Notes Template',
+    description: 'Structured format for effective meeting notes',
+    tags: ['meeting', 'notes', 'template'],
+    template: `Create a meeting notes template for: MEETING_TYPE
+
+Should include:
+- Attendees and date/time
+- Agenda items
+- Key decisions made
+- Action items with owners
+- Parking lot items
+- Next meeting info
+
+Make it clean and easy to fill out.`,
+    variables: ['MEETING_TYPE'],
+  },
+  {
+    id: 'productivity-time-block',
+    categoryId: 'productivity',
+    title: 'Time Blocking Plan',
+    description: 'Organize your day with focused time blocks',
+    tags: ['time-management', 'schedule', 'focus'],
+    template: `Create a time-blocked schedule for:
+
+Tasks to complete: TASKS
+Working hours: HOURS
+Energy patterns: ENERGY
+Priorities: PRIORITIES
+
+Provide:
+1. Time-blocked schedule
+2. Deep work blocks protected
+3. Break times scheduled
+4. Buffer time included
+5. Flexibility for overruns`,
+    variables: ['TASKS', 'HOURS', 'ENERGY', 'PRIORITIES'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // COMMUNICATION
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'comm-difficult-conversation',
+    categoryId: 'communication',
+    title: 'Difficult Conversation Script',
+    description: 'Navigate tough conversations constructively',
+    tags: ['difficult', 'conflict', 'script'],
+    template: `Help me prepare for a difficult conversation:
+
+Situation: SITUATION
+Relationship: RELATIONSHIP
+My goal: GOAL
+My concerns: CONCERNS
+
+Provide:
+1. Conversation opening
+2. Key points to cover
+3. Phrasing for sensitive topics
+4. How to listen actively
+5. Paths the conversation might take
+6. Best/worst case responses`,
+    variables: ['SITUATION', 'RELATIONSHIP', 'GOAL', 'CONCERNS'],
+  },
+  {
+    id: 'comm-negotiation',
+    categoryId: 'communication',
+    title: 'Negotiation Preparation',
+    description: 'Prepare for any negotiation scenario',
+    tags: ['negotiation', 'persuasion', 'strategy'],
+    template: `Prepare me for a negotiation:
+
+What I'm negotiating: SUBJECT
+Other party: OTHER_PARTY
+My ideal outcome: IDEAL
+My walk-away point: WALK_AWAY
+
+Provide:
+1. Research checklist
+2. My BATNA (best alternative)
+3. Their likely BATNA
+4. Opening offer strategy
+5. Concession planning
+6. Closing approaches`,
+    variables: ['SUBJECT', 'OTHER_PARTY', 'IDEAL', 'WALK_AWAY'],
+  },
+  {
+    id: 'comm-apology',
+    categoryId: 'communication',
+    title: 'Craft Apology',
+    description: 'Sincere, effective apologies',
+    tags: ['apology', 'sorry', 'repair'],
+    template: `Help me write an apology:
+
+Situation: SITUATION
+Who was hurt: WHO
+My responsibility: RESPONSIBILITY
+Relationship: RELATIONSHIP
+
+Draft an apology that:
+- Takes full responsibility
+- Acknowledges impact
+- Doesn't make excuses
+- Offers to make amends
+- Commits to change`,
+    variables: ['SITUATION', 'WHO', 'RESPONSIBILITY', 'RELATIONSHIP'],
+  },
+  {
+    id: 'comm-ask-for-help',
+    categoryId: 'communication',
+    title: 'Request Help/Advice',
+    description: 'Effective requests for assistance',
+    tags: ['help', 'request', 'advice'],
+    template: `Help me write a request for:
+
+What I need: NEED
+Who I'm asking: WHO
+Context they have: CONTEXT
+Desired outcome: OUTCOME
+
+Create a request that:
+- Respects their time
+- Provides necessary context
+- Makes it easy to say yes
+- Suggests how they can help
+- Offers reciprocity`,
+    variables: ['NEED', 'WHO', 'CONTEXT', 'OUTCOME'],
+  },
+  {
+    id: 'comm-pitch',
+    categoryId: 'communication',
+    title: 'Elevator Pitch',
+    description: 'Convince someone in 30 seconds',
+    tags: ['pitch', 'elevator', 'sales'],
+    template: `Create an elevator pitch for:
+
+What I'm pitching: WHAT
+Target audience: AUDIENCE
+Time limit: TIME seconds
+My unique angle: ANGLE
+
+Provide:
+1. Hook (first 5 seconds)
+2. Problem statement
+3. Solution (my pitch)
+4. Proof/credibility
+5. Ask/next step
+
+Also provide a 1-minute and 5-minute version.`,
+    variables: ['WHAT', 'AUDIENCE', 'TIME', 'ANGLE'],
+  },
+  {
+    id: 'comm-thank-you',
+    categoryId: 'communication',
+    title: 'Thank You Message',
+    description: 'Meaningful expressions of gratitude',
+    tags: ['thank-you', 'gratitude', 'appreciation'],
+    template: `Write a thank you message for:
+
+Occasion: OCCASION
+Recipient: WHO
+What they did: ACTION
+Relationship: RELATIONSHIP
+Tone: TONE
+
+Create something:
+- Specific to what they did
+- Genuine and warm
+- Appropriate to the relationship
+- Memorable and meaningful`,
+    variables: ['OCCASION', 'WHO', 'ACTION', 'RELATIONSHIP', 'TONE'],
+  },
+];
+
+/* ─── HELPER: Get prompts by category ─── */
+export function getPromptsByCategory(categoryId: string): PromptTemplate[] {
+  return PROMPT_TEMPLATES.filter(p => p.categoryId === categoryId);
+}
+
+/* ─── HELPER: Search prompts ─── */
+export function searchPrompts(query: string): PromptTemplate[] {
+  const q = query.toLowerCase();
+  return PROMPT_TEMPLATES.filter(p =>
+    p.title.toLowerCase().includes(q) ||
+    p.description.toLowerCase().includes(q) ||
+    p.tags.some(t => t.toLowerCase().includes(q))
+  );
+}
+
+/* ─── HELPER: Get prompts by tags ─── */
+export function getPromptsByTags(tags: string[]): PromptTemplate[] {
+  return PROMPT_TEMPLATES.filter(p =>
+    tags.some(t => p.tags.includes(t))
+  );
+}

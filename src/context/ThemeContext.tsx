@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
 
-type Theme = 'dark' | 'light' | 'rave' | 'neon' | 'hacker' | 'toxic' | 'candy';
+type Theme = 'dark' | 'light' | 'rave' | 'neon' | 'hacker' | 'toxic' | 'candy' | 'cyberpunk' | 'ocean' | 'sunset' | 'retro' | 'minimalist';
 
 interface ThemeContextType {
   theme: Theme;
@@ -13,16 +13,42 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const ALL_THEME_CLASSES = ['theme-dark', 'theme-light', 'theme-rave', 'theme-neon', 'theme-hacker', 'theme-toxic', 'theme-candy'];
+const ALL_THEMES: Theme[] = ['dark', 'light', 'rave', 'neon', 'hacker', 'toxic', 'candy', 'cyberpunk', 'ocean', 'sunset', 'retro', 'minimalist'];
+const ALL_THEME_CLASSES = ALL_THEMES.map(t => `theme-${t}`);
+
+function loadSaved<T>(key: string, fallback: T, validate?: (v: any) => boolean): T {
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw === null) return fallback;
+    const parsed = JSON.parse(raw);
+    if (validate && !validate(parsed)) return fallback;
+    return parsed as T;
+  } catch { return fallback; }
+}
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>('dark');
-  const [intensity, setIntensityState] = useState<number>(50);
-  const [motionLevel, setMotionLevelState] = useState<number>(75);
+  const [theme, setThemeState] = useState<Theme>(() =>
+    loadSaved<Theme>('ai-theme', 'dark', v => ALL_THEMES.includes(v))
+  );
+  const [intensity, setIntensityState] = useState<number>(() =>
+    loadSaved<number>('ai-intensity', 50, v => typeof v === 'number' && v >= 0 && v <= 100)
+  );
+  const [motionLevel, setMotionLevelState] = useState<number>(() =>
+    loadSaved<number>('ai-motion', 75, v => typeof v === 'number' && v >= 0 && v <= 100)
+  );
 
-  const setTheme = useCallback((t: Theme) => setThemeState(t), []);
-  const setIntensity = useCallback((v: number) => setIntensityState(v), []);
-  const setMotionLevel = useCallback((v: number) => setMotionLevelState(v), []);
+  const setTheme = useCallback((t: Theme) => {
+    setThemeState(t);
+    try { localStorage.setItem('ai-theme', JSON.stringify(t)); } catch {}
+  }, []);
+  const setIntensity = useCallback((v: number) => {
+    setIntensityState(v);
+    try { localStorage.setItem('ai-intensity', JSON.stringify(v)); } catch {}
+  }, []);
+  const setMotionLevel = useCallback((v: number) => {
+    setMotionLevelState(v);
+    try { localStorage.setItem('ai-motion', JSON.stringify(v)); } catch {}
+  }, []);
 
   useEffect(() => {
     document.documentElement.classList.remove(...ALL_THEME_CLASSES);

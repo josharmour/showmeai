@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+import { Link } from 'react-router-dom';
 import {
   Terminal, Monitor, HardDrive, Cpu, Shield, Zap, BookOpen,
-  ChevronDown, ChevronRight, Copy, Check, Server, Database, Sparkles
+  ChevronDown, ChevronRight, Copy, Check, Server, Database, Sparkles, ArrowRight
 } from 'lucide-react';
 
 /* ─── Copy-to-clipboard button ─── */
@@ -28,7 +29,7 @@ const CopyButton: React.FC<{ text: string }> = ({ text }) => {
 const CodeBlock: React.FC<{ title: string; code: string; lang?: string }> = ({ title, code, lang }) => {
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-xl border border-[var(--accent-color)]/20 overflow-hidden my-4">
+    <div className="rounded-xl border border-[var(--accent-color)]/40 overflow-hidden my-4">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-4 py-3 bg-[var(--secondary-color)]/60 hover:bg-[var(--secondary-color)] transition-colors text-left"
@@ -57,12 +58,22 @@ const CodeBlock: React.FC<{ title: string; code: string; lang?: string }> = ({ t
 /* ─── Section wrapper ─── */
 const Section: React.FC<{ id: string; icon: React.ReactNode; title: string; subtitle?: string; children: React.ReactNode }> = ({
   id, icon, title, subtitle, children
-}) => (
+}) => {
+  const sectionRef = React.useRef<HTMLElement>(null);
+  const [vis, setVis] = React.useState(false);
+  React.useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); obs.disconnect(); } }, { rootMargin: '-40px' });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
   <motion.section
+    ref={sectionRef}
     id={id}
     initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
+    animate={vis ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
     transition={{ duration: 0.5 }}
     className="mb-16"
   >
@@ -73,7 +84,8 @@ const Section: React.FC<{ id: string; icon: React.ReactNode; title: string; subt
     {subtitle && <p className="text-base opacity-70 ml-12 mb-6">{subtitle}</p>}
     <div className="ml-0 md:ml-12 mt-4">{children}</div>
   </motion.section>
-);
+  );
+};
 
 /* ─── MAIN COMPONENT ─── */
 export const HowToUseAI: React.FC = () => {
@@ -101,7 +113,7 @@ export const HowToUseAI: React.FC = () => {
 
         {/* ─── SECTION 1: Claude Code ─── */}
         <Section id="claude-code" icon={<Terminal size={22} />} title="Claude Code: The Command Line Agent" subtitle="Best CLI for Power Users & DevOps. Not a chatbot; a terminal-based agent.">
-          <div className="p-6 rounded-2xl bg-[var(--secondary-color)]/40 border border-[var(--accent-color)]/15 mb-6">
+          <div className="p-6 rounded-2xl bg-[var(--secondary-color)]/40 border border-[var(--accent-color)]/30 mb-6">
             <h3 className="font-bold text-lg mb-4 text-[var(--accent-color)]">What Makes It Special</h3>
             <ul className="space-y-4">
               <li className="flex gap-3">
@@ -134,15 +146,15 @@ export const HowToUseAI: React.FC = () => {
         {/* ─── SECTION 2: Cursor ─── */}
         <Section id="cursor" icon={<Monitor size={22} />} title="Cursor: The AI-Native IDE" subtitle="Best Full-Stack IDE. A fork of VS Code that has matured into a seamless 'Shadow Workspace'.">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="p-5 rounded-xl bg-[var(--secondary-color)]/40 border border-[var(--accent-color)]/10">
+            <div className="p-5 rounded-xl bg-[var(--secondary-color)]/40 border border-[var(--accent-color)]/30">
               <h4 className="font-bold mb-2 text-[var(--accent-color)]">Codebase Indexing</h4>
               <p className="text-sm opacity-80">Indexes your entire repository locally using vector embeddings to perform "Codebase RAG," answering questions like "Where is the authentication logic defined?" with near-perfect accuracy.</p>
             </div>
-            <div className="p-5 rounded-xl bg-[var(--secondary-color)]/40 border border-[var(--accent-color)]/10">
+            <div className="p-5 rounded-xl bg-[var(--secondary-color)]/40 border border-[var(--accent-color)]/30">
               <h4 className="font-bold mb-2 text-[var(--accent-color)]">Shadow Workspace</h4>
               <p className="text-sm opacity-80">Runs a background instance of your project's linter and interpreter. It checks if code compiles before showing it to you, drastically reducing hallucinated syntax errors.</p>
             </div>
-            <div className="p-5 rounded-xl bg-[var(--secondary-color)]/40 border border-[var(--accent-color)]/10">
+            <div className="p-5 rounded-xl bg-[var(--secondary-color)]/40 border border-[var(--accent-color)]/30">
               <h4 className="font-bold mb-2 text-[var(--accent-color)]">Composer Mode</h4>
               <p className="text-sm opacity-80">A multi-file editing interface that allows you to refactor code across the entire dependency graph in one prompt.</p>
             </div>
@@ -167,11 +179,12 @@ export const HowToUseAI: React.FC = () => {
               </li>
             </ul>
           </div>
-           <CodeBlock title="Install & usage" lang="bash" code={`npm install -g @google/gemini-cli
-gemini login
-gemini chat
-# Or pipe content:
-cat error.log | gemini "fix this"`} />
+           <CodeBlock title="Install & usage" lang="bash" code={`pip install google-genai
+# Or use gcloud CLI:
+gcloud auth login
+gcloud gemini chat
+# Pipe content:
+cat error.log | gcloud gemini "fix this"`} />
         </Section>
 
         {/* ─── SECTION 4: Infrastructure & Hardware ─── */}
@@ -192,7 +205,7 @@ cat error.log | gemini "fix this"`} />
             </div>
             <div className="p-5 rounded-xl border border-[var(--accent-color)]/20 bg-[var(--bg-color)]/50">
               <h4 className="font-bold text-lg mb-2">NVIDIA RTX 50-Series</h4>
-              <p className="text-sm opacity-80">Powerful but limited by VRAM capacity (24GB max). To run large models, one must use "Model Parallelism" across dual GPUs, which is complex and expensive.</p>
+              <p className="text-sm opacity-80">Powerful but limited by VRAM capacity (32GB max on RTX 5090 Blackwell). Running 70B+ models requires Model Parallelism across dual GPUs, which is complex and expensive. Consumer VRAM still lags far behind Apple's Unified Memory capacities.</p>
             </div>
           </div>
 
@@ -205,7 +218,7 @@ cat error.log | gemini "fix this"`} />
              <div className="grid grid-cols-1 gap-2 opacity-80">
                 <div><span className="font-bold">16GB RAM:</span> ollama run llama3.2:3b</div>
                 <div><span className="font-bold">32GB RAM:</span> ollama run mistral:large</div>
-                <div><span className="font-bold">64GB+ RAM:</span> ollama run llama4:scout</div>
+                <div><span className="font-bold">96GB+ RAM (M4 Max):</span> ollama run llama4:scout</div>
              </div>
              
              <div className="mt-4 text-[var(--accent-color)]"># 3. Integrate</div>
@@ -317,6 +330,11 @@ cat error.log | gemini "fix this"`} />
             <p className="text-sm opacity-80 leading-relaxed">
               OMEGA-SENTINEL implements Reflexion-based Tree-of-Thoughts with Multi-Agent Orchestration. It activates 32 specialized intelligence modules spanning security validation, predictive assistance, causal debugging, creativity engines, and more. Paste the full preset below into your <code className="text-xs bg-[var(--bg-color)] px-1 py-0.5 rounded">CLAUDE.md</code> or <code className="text-xs bg-[var(--bg-color)] px-1 py-0.5 rounded">~/.claude/CLAUDE.md</code> (global).
             </p>
+            <div className="mt-4">
+              <Link to="/omega-prompt" className="text-[var(--accent-color)] font-bold flex items-center gap-2 hover:underline">
+                View Full Omega Prompt Setup Guide <ArrowRight size={16} />
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">

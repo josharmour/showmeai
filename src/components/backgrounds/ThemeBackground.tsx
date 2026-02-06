@@ -5,7 +5,8 @@ import { useTheme } from '../../context/ThemeContext';
  * Performance-optimized canvas backgrounds.
  *
  * Key optimisations vs. previous version:
- *  1. Adaptive FPS — lerps 15→60 fps based on intensity
+ *  1. Adaptive FPS — lerps 15→native refresh rate (120/144/240 Hz)
+ *     based on intensity. Uncapped above 85% for butter-smooth motion.
  *  2. shadowBlur removed everywhere (GPU killer on large
  *     canvases). Glow is faked via double-draw at larger
  *     radius + lower alpha — visually identical, 5-10× faster.
@@ -24,12 +25,15 @@ function useIntensityRef() {
   return ref;
 }
 
-/** Adaptive frame-skip: returns true when the frame should be painted */
+/** Adaptive frame-skip — unlocks native refresh rate (120/144/240 Hz) at high intensity */
 function useFrameThrottle(iRef: React.RefObject<number>) {
   const last = useRef(0);
   return useCallback((now: number) => {
     const t = (iRef.current ?? 50) / 100;
-    const targetMs = 1000 / (15 + t * 45); // 15fps@0 → 60fps@100
+    // Above 85% intensity: no throttle — run at monitor's native refresh rate
+    if (t > 0.85) { last.current = now; return true; }
+    // Below 85%: adaptive 15 fps → ~100 fps
+    const targetMs = 1000 / (15 + t * 100);
     if (now - last.current < targetMs) return false;
     last.current = now;
     return true;
@@ -42,11 +46,23 @@ function sizeCanvas(canvas: HTMLCanvasElement) {
   canvas.height = window.innerHeight;
 }
 
+/** Track mouse position for interactive backgrounds */
+function useMouseRef() {
+  const ref = useRef({ x: -1, y: -1 });
+  useEffect(() => {
+    const handler = (e: MouseEvent) => { ref.current.x = e.clientX; ref.current.y = e.clientY; };
+    window.addEventListener('mousemove', handler, { passive: true });
+    return () => window.removeEventListener('mousemove', handler);
+  }, []);
+  return ref;
+}
+
 /* ═══════════════ DARK ═══════════════ */
 const DarkBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const iRef = useIntensityRef();
   const shouldPaint = useFrameThrottle(iRef);
+  const mouse = useMouseRef();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -71,6 +87,7 @@ const DarkBackground: React.FC = () => {
       if (!shouldPaint(now)) return;
       const t = iRef.current / 100;
       const w = canvas.width, h = canvas.height;
+      const mx = mouse.current.x, my = mouse.current.y;
       ctx.clearRect(0, 0, w, h);
       const vis = Math.max(5, (N * t) | 0);
 
@@ -82,6 +99,18 @@ const DarkBackground: React.FC = () => {
         if (op[i] < 0.05) op[i] = 0.05; else if (op[i] > 0.8) op[i] = 0.8;
         ys[i] -= spd[i] * (0.1 + t * 1.5);
         if (ys[i] < -5) { ys[i] = h + 5; xs[i] = Math.random() * w; }
+
+        // Mouse gravitation — subtle pull toward cursor
+        if (mx > 0 && t > 0.3) {
+          const ddx = mx - xs[i], ddy = my - ys[i];
+          const dist = Math.sqrt(ddx * ddx + ddy * ddy);
+          if (dist < 200 && dist > 1) {
+            const force = 0.15 * t * (1 - dist / 200);
+            xs[i] += (ddx / dist) * force;
+            ys[i] += (ddy / dist) * force;
+          }
+        }
+
         const r = rs[i] * (0.5 + t * 0.7);
         ctx.moveTo(xs[i] + r, ys[i]);
         ctx.arc(xs[i], ys[i], r, 0, Math.PI * 2);
@@ -100,6 +129,15 @@ const DarkBackground: React.FC = () => {
         }
         ctx.fill();
         ctx.globalAlpha = 1;
+      }
+
+      // Mouse glow aura
+      if (mx > 0 && t > 0.4) {
+        const grad = ctx.createRadialGradient(mx, my, 0, mx, my, 120);
+        grad.addColorStop(0, `rgba(100,150,255,${0.04 * t})`);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fillRect(mx - 120, my - 120, 240, 240);
       }
     };
     animId = requestAnimationFrame(animate);
@@ -124,15 +162,16 @@ const LightBackground: React.FC = () => {
     const ctx = canvas.getContext('2d')!;
     sizeCanvas(canvas);
 
-    const colors = [[59,130,246,0.08],[147,51,234,0.06],[236,72,153,0.06],[34,197,94,0.06]];
-    const N = 8;
+    // More vibrant colors for light theme
+    const colors = [[59,130,246,0.12],[147,51,234,0.09],[236,72,153,0.09],[34,197,94,0.09]];
+    const N = 12; // Increased count
     const ox = new Float32Array(N), oy = new Float32Array(N), or_ = new Float32Array(N);
     const dx = new Float32Array(N), dy = new Float32Array(N);
     const ci = new Uint8Array(N);
     for (let i = 0; i < N; i++) {
       ox[i] = Math.random() * canvas.width;
       oy[i] = Math.random() * canvas.height;
-      or_[i] = Math.random() * 200 + 100;
+      or_[i] = Math.random() * 250 + 150; // Larger blobs
       dx[i] = (Math.random() - 0.5) * 0.5;
       dy[i] = (Math.random() - 0.5) * 0.5;
       ci[i] = i % colors.length;
@@ -154,7 +193,8 @@ const LightBackground: React.FC = () => {
         const r = or_[i] * (0.5 + t * 0.5);
         const c = colors[ci[i]];
         const grad = ctx.createRadialGradient(ox[i], oy[i], 0, ox[i], oy[i], r);
-        grad.addColorStop(0, `rgba(${c[0]},${c[1]},${c[2]},${c[3] * t * 2})`);
+        // Higher alpha values
+        grad.addColorStop(0, `rgba(${c[0]},${c[1]},${c[2]},${c[3] * t * 3})`);
         grad.addColorStop(1, 'transparent');
         ctx.fillStyle = grad;
         ctx.fillRect(ox[i] - r, oy[i] - r, r * 2, r * 2);
@@ -259,6 +299,7 @@ const NeonBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const iRef = useIntensityRef();
   const shouldPaint = useFrameThrottle(iRef);
+  const mouse = useMouseRef();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -328,6 +369,17 @@ const NeonBackground: React.FC = () => {
         ctx.stroke();
       }
       ctx.globalAlpha = 1;
+
+      // Mouse glow aura for neon
+      const mx = mouse.current.x, my = mouse.current.y;
+      if (mx > 0 && t > 0.3) {
+        const grad = ctx.createRadialGradient(mx, my, 0, mx, my, 150);
+        grad.addColorStop(0, `rgba(217,70,239,${0.05 * t})`);
+        grad.addColorStop(0.5, `rgba(0,255,204,${0.02 * t})`);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fillRect(mx - 150, my - 150, 300, 300);
+      }
     };
     animId = requestAnimationFrame(animate);
 
@@ -495,20 +547,28 @@ const CandyBackground: React.FC = () => {
     sizeCanvas(canvas);
 
     const N = 50;
-    const colors = ['#ec4899', '#f472b6', '#a855f7', '#fb923c', '#facc15', '#34d399'];
-    const sx = new Float32Array(N), sy = new Float32Array(N), ss = new Float32Array(N);
-    const sspd = new Float32Array(N), srot = new Float32Array(N), srspd = new Float32Array(N);
-    const ssides = new Uint8Array(N);
-    const sc: string[] = [];
+    const colors = ['#f472b6', '#a855f7', '#818cf8', '#ec4899', '#c084fc', '#fb7185'];
+    const px = new Float32Array(N), py = new Float32Array(N), ps = new Float32Array(N);
+    const vx = new Float32Array(N), vy = new Float32Array(N);
+    const pc: string[] = [];
     for (let i = 0; i < N; i++) {
-      sx[i] = Math.random() * canvas.width;
-      sy[i] = Math.random() * canvas.height;
-      ss[i] = Math.random() * 18 + 6;
-      sspd[i] = Math.random() * 0.3 + 0.08;
-      srot[i] = Math.random() * Math.PI * 2;
-      srspd[i] = (Math.random() - 0.5) * 0.02;
-      ssides[i] = (Math.random() * 4 + 3) | 0;
-      sc.push(colors[(Math.random() * colors.length) | 0]);
+      px[i] = Math.random() * canvas.width;
+      py[i] = Math.random() * canvas.height;
+      ps[i] = Math.random() * 3 + 1.5;
+      vx[i] = (Math.random() - 0.5) * 0.4;
+      vy[i] = -Math.random() * 0.3 - 0.1;
+      pc.push(colors[(Math.random() * colors.length) | 0]);
+    }
+
+    // Soft orb positions
+    const orbCount = 4;
+    const ox = new Float32Array(orbCount), oy = new Float32Array(orbCount);
+    const osx = new Float32Array(orbCount), osy = new Float32Array(orbCount);
+    for (let i = 0; i < orbCount; i++) {
+      ox[i] = Math.random() * canvas.width;
+      oy[i] = Math.random() * canvas.height;
+      osx[i] = (Math.random() - 0.5) * 0.2;
+      osy[i] = (Math.random() - 0.5) * 0.15;
     }
 
     let animId = 0;
@@ -518,33 +578,241 @@ const CandyBackground: React.FC = () => {
       const t = iRef.current / 100;
       const w = canvas.width, h = canvas.height;
 
-      ctx.fillStyle = `rgba(253,242,248,${0.06 + (1 - t) * 0.12})`;
+      ctx.fillStyle = `rgba(26, 10, 30, ${0.15 + (1 - t) * 0.2})`;
       ctx.fillRect(0, 0, w, h);
 
+      // Soft glowing orbs
+      const orbVis = Math.max(1, (orbCount * t) | 0);
+      for (let i = 0; i < orbVis; i++) {
+        ox[i] += osx[i] * (0.3 + t * 0.7);
+        oy[i] += osy[i] * (0.3 + t * 0.7);
+        if (ox[i] < -200) ox[i] = w + 200;
+        if (ox[i] > w + 200) ox[i] = -200;
+        if (oy[i] < -200) oy[i] = h + 200;
+        if (oy[i] > h + 200) oy[i] = -200;
+
+        const r = 120 + t * 80;
+        const grad = ctx.createRadialGradient(ox[i], oy[i], 0, ox[i], oy[i], r);
+        const c = colors[i % colors.length];
+        grad.addColorStop(0, c + '18');
+        grad.addColorStop(0.5, c + '08');
+        grad.addColorStop(1, c + '00');
+        ctx.fillStyle = grad;
+        ctx.fillRect(ox[i] - r, oy[i] - r, r * 2, r * 2);
+      }
+
+      // Floating particles
       const vis = Math.max(2, (N * t) | 0);
       for (let i = 0; i < vis; i++) {
-        sy[i] -= sspd[i] * (0.2 + t * 1.0);
-        srot[i] += srspd[i] * (0.3 + t * 1.5);
-        if (sy[i] < -ss[i] * 3) { sy[i] = h + ss[i] * 2; sx[i] = Math.random() * w; }
+        px[i] += vx[i] * (0.3 + t * 1.2);
+        py[i] += vy[i] * (0.3 + t * 0.8);
+        if (py[i] < -10) { py[i] = h + 10; px[i] = Math.random() * w; }
+        if (px[i] < -10) px[i] = w + 10;
+        if (px[i] > w + 10) px[i] = -10;
 
-        const drawSize = ss[i] * (0.4 + t * 0.6);
-        const sides = ssides[i];
-        ctx.save();
-        ctx.translate(sx[i], sy[i]);
-        ctx.rotate(srot[i]);
+        const sz = ps[i] * (0.5 + t * 0.5);
+        // Glow layer
         ctx.beginPath();
-        for (let j = 0; j < sides; j++) {
-          const angle = (j / sides) * Math.PI * 2 - Math.PI / 2;
-          if (j === 0) ctx.moveTo(Math.cos(angle) * drawSize, Math.sin(angle) * drawSize);
-          else ctx.lineTo(Math.cos(angle) * drawSize, Math.sin(angle) * drawSize);
-        }
-        ctx.closePath();
-        ctx.fillStyle = sc[i] + '22';
+        ctx.arc(px[i], py[i], sz * 3, 0, Math.PI * 2);
+        ctx.fillStyle = pc[i] + '15';
         ctx.fill();
-        ctx.strokeStyle = sc[i] + '55';
-        ctx.lineWidth = 1.5;
+        // Core
+        ctx.beginPath();
+        ctx.arc(px[i], py[i], sz, 0, Math.PI * 2);
+        ctx.fillStyle = pc[i] + '80';
+        ctx.fill();
+      }
+    };
+    animId = requestAnimationFrame(animate);
+
+    const onResize = () => sizeCanvas(canvas);
+    window.addEventListener('resize', onResize);
+    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', onResize); };
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none" />;
+};
+
+/* ═══════════════ CYBERPUNK ═══════════════ */
+const CyberpunkBackground: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const iRef = useIntensityRef();
+  const shouldPaint = useFrameThrottle(iRef);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d')!;
+    sizeCanvas(canvas);
+
+    // Grid lines + floating chrome particles
+    const N = 80;
+    const px = new Float32Array(N), py = new Float32Array(N);
+    const ps = new Float32Array(N), pa = new Float32Array(N);
+    const pHue = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      px[i] = Math.random() * canvas.width;
+      py[i] = Math.random() * canvas.height;
+      ps[i] = Math.random() * 3 + 1;
+      pa[i] = Math.random() * 0.6 + 0.2;
+      pHue[i] = Math.random() > 0.5 ? 15 : 190; // orange or cyan
+    }
+
+    let animId = 0, frame = 0;
+    const animate = (now: number) => {
+      animId = requestAnimationFrame(animate);
+      if (!shouldPaint(now)) return;
+      const t = iRef.current / 100;
+      const w = canvas.width, h = canvas.height;
+      frame++;
+
+      ctx.fillStyle = `rgba(12,10,26,${0.08 + (1 - t) * 0.12})`;
+      ctx.fillRect(0, 0, w, h);
+
+      // Perspective grid floor
+      if (t > 0.1) {
+        ctx.strokeStyle = `rgba(255,107,43,${0.04 * t})`;
+        ctx.lineWidth = 1;
+        const horizon = h * 0.55;
+        const gridLines = Math.floor(12 * t);
+        for (let i = 0; i < gridLines; i++) {
+          const y = horizon + (i / gridLines) * (h - horizon);
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(w, y);
+          ctx.stroke();
+        }
+        const vertLines = Math.floor(16 * t);
+        for (let i = 0; i < vertLines; i++) {
+          const ratio = i / vertLines;
+          const topX = w * 0.5 + (ratio - 0.5) * w * 0.3;
+          const botX = ratio * w;
+          ctx.beginPath();
+          ctx.moveTo(topX, horizon);
+          ctx.lineTo(botX, h);
+          ctx.stroke();
+        }
+      }
+
+      // Floating particles
+      const vis = Math.max(2, (N * t) | 0);
+      for (let i = 0; i < vis; i++) {
+        py[i] -= ps[i] * (0.3 + t * 0.8);
+        px[i] += Math.sin(frame * 0.01 + i) * 0.3 * t;
+        if (py[i] < -10) { py[i] = h + 10; px[i] = Math.random() * w; }
+
+        const hue = pHue[i];
+        const alpha = pa[i] * t;
+        // Glow
+        if (t > 0.3) {
+          ctx.beginPath();
+          ctx.arc(px[i], py[i], ps[i] * 3, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${hue},100%,60%,${alpha * 0.1})`;
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.arc(px[i], py[i], ps[i], 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue},100%,60%,${alpha})`;
+        ctx.fill();
+      }
+
+      // Occasional scanline
+      if (t > 0.5) {
+        const scanY = (frame * 3 * t) % h;
+        ctx.fillStyle = `rgba(255,107,43,${0.02 * t})`;
+        ctx.fillRect(0, scanY, w, 2);
+      }
+    };
+    animId = requestAnimationFrame(animate);
+
+    const onResize = () => sizeCanvas(canvas);
+    window.addEventListener('resize', onResize);
+    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', onResize); };
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-50" />;
+};
+
+/* ═══════════════ OCEAN ═══════════════ */
+const OceanBackground: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const iRef = useIntensityRef();
+  const shouldPaint = useFrameThrottle(iRef);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d')!;
+    sizeCanvas(canvas);
+
+    // Bubbles
+    const N = 70;
+    const bx = new Float32Array(N), by = new Float32Array(N);
+    const br = new Float32Array(N), bs = new Float32Array(N), bw = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      bx[i] = Math.random() * canvas.width;
+      by[i] = Math.random() * canvas.height;
+      br[i] = Math.random() * 12 + 2;
+      bs[i] = Math.random() * 0.5 + 0.1;
+      bw[i] = Math.random() * Math.PI * 2;
+    }
+
+    let animId = 0, frame = 0;
+    const animate = (now: number) => {
+      animId = requestAnimationFrame(animate);
+      if (!shouldPaint(now)) return;
+      const t = iRef.current / 100;
+      const w = canvas.width, h = canvas.height;
+      frame++;
+
+      ctx.fillStyle = `rgba(10,25,47,${0.05 + (1 - t) * 0.1})`;
+      ctx.fillRect(0, 0, w, h);
+
+      // Gentle wave layers
+      if (t > 0.1) {
+        for (let layer = 0; layer < 3; layer++) {
+          const layerAlpha = (0.015 + layer * 0.005) * t;
+          ctx.beginPath();
+          ctx.moveTo(0, h);
+          for (let x = 0; x <= w; x += 4) {
+            const y = h * (0.6 - layer * 0.1) +
+              Math.sin((x + frame * (1.5 - layer * 0.4)) * 0.005) * 30 * t +
+              Math.sin((x + frame * (0.8 + layer * 0.3)) * 0.008) * 15 * t;
+            ctx.lineTo(x, y);
+          }
+          ctx.lineTo(w, h);
+          ctx.closePath();
+          ctx.fillStyle = `rgba(14,165,233,${layerAlpha})`;
+          ctx.fill();
+        }
+      }
+
+      // Bubbles
+      const vis = Math.max(2, (N * t) | 0);
+      for (let i = 0; i < vis; i++) {
+        by[i] -= bs[i] * (0.2 + t * 0.8);
+        bx[i] += Math.sin(bw[i] + frame * 0.008) * 0.4 * t;
+        if (by[i] < -br[i] * 2) { by[i] = h + br[i]; bx[i] = Math.random() * w; }
+
+        const drawR = br[i] * (0.3 + t * 0.7);
+        // Soft glow
+        if (t > 0.2) {
+          ctx.beginPath();
+          ctx.arc(bx[i], by[i], drawR * 2, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(14,165,233,${0.02 * t})`;
+          ctx.fill();
+        }
+        // Bubble ring
+        ctx.beginPath();
+        ctx.arc(bx[i], by[i], drawR, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(14,165,233,${0.15 * t})`;
+        ctx.lineWidth = 1;
         ctx.stroke();
-        ctx.restore();
+        // Highlight
+        ctx.beginPath();
+        ctx.arc(bx[i] - drawR * 0.3, by[i] - drawR * 0.3, drawR * 0.25, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${0.15 * t})`;
+        ctx.fill();
       }
     };
     animId = requestAnimationFrame(animate);
@@ -555,6 +823,278 @@ const CandyBackground: React.FC = () => {
   }, []);
 
   return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-40" />;
+};
+
+/* ═══════════════ SUNSET ═══════════════ */
+const SunsetBackground: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const iRef = useIntensityRef();
+  const shouldPaint = useFrameThrottle(iRef);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d')!;
+    sizeCanvas(canvas);
+
+    // Embers / motes
+    const N = 100;
+    const ex = new Float32Array(N), ey = new Float32Array(N);
+    const er = new Float32Array(N), es = new Float32Array(N);
+    const ew = new Float32Array(N), ea = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      ex[i] = Math.random() * canvas.width;
+      ey[i] = Math.random() * canvas.height;
+      er[i] = Math.random() * 2.5 + 0.5;
+      es[i] = Math.random() * 0.4 + 0.08;
+      ew[i] = Math.random() * Math.PI * 2;
+      ea[i] = Math.random() * 0.5 + 0.3;
+    }
+
+    let animId = 0, frame = 0;
+    const animate = (now: number) => {
+      animId = requestAnimationFrame(animate);
+      if (!shouldPaint(now)) return;
+      const t = iRef.current / 100;
+      const w = canvas.width, h = canvas.height;
+      frame++;
+
+      ctx.fillStyle = `rgba(26,10,0,${0.04 + (1 - t) * 0.1})`;
+      ctx.fillRect(0, 0, w, h);
+
+      // Warm gradient horizon
+      if (t > 0.1) {
+        const horizonY = h * 0.65;
+        const grad = ctx.createLinearGradient(0, horizonY - 100, 0, horizonY + 50);
+        grad.addColorStop(0, `rgba(249,115,22,${0.03 * t})`);
+        grad.addColorStop(0.5, `rgba(168,85,247,${0.02 * t})`);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, horizonY - 100, w, 200);
+      }
+
+      // Sun glow (large soft circle at horizon)
+      if (t > 0.2) {
+        const sunX = w * 0.5 + Math.sin(frame * 0.003) * 20;
+        const sunY = h * 0.55;
+        const sunR = 60 + t * 40;
+        const sunGrad = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, sunR);
+        sunGrad.addColorStop(0, `rgba(249,115,22,${0.06 * t})`);
+        sunGrad.addColorStop(0.5, `rgba(249,115,22,${0.02 * t})`);
+        sunGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = sunGrad;
+        ctx.fillRect(sunX - sunR, sunY - sunR, sunR * 2, sunR * 2);
+      }
+
+      // Floating embers
+      const vis = Math.max(3, (N * t) | 0);
+      for (let i = 0; i < vis; i++) {
+        ey[i] -= es[i] * (0.2 + t * 1.0);
+        ex[i] += Math.sin(ew[i] + frame * 0.01) * 0.3 * t;
+        if (ey[i] < -10) { ey[i] = h + 10; ex[i] = Math.random() * w; }
+
+        const alpha = ea[i] * t;
+        const hue = 20 + (i % 30); // warm orange-yellow range
+        // Glow
+        if (t > 0.3) {
+          ctx.beginPath();
+          ctx.arc(ex[i], ey[i], er[i] * 3, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${hue},100%,60%,${alpha * 0.1})`;
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.arc(ex[i], ey[i], er[i], 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue},100%,65%,${alpha})`;
+        ctx.fill();
+      }
+    };
+    animId = requestAnimationFrame(animate);
+
+    const onResize = () => sizeCanvas(canvas);
+    window.addEventListener('resize', onResize);
+    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', onResize); };
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-50" />;
+};
+
+/* ═══════════════ RETRO / SYNTHWAVE ═══════════════ */
+const RetroBackground: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const iRef = useIntensityRef();
+  const shouldPaint = useFrameThrottle(iRef);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d')!;
+    sizeCanvas(canvas);
+
+    // Stars for the sky portion
+    const N = 60;
+    const sx = new Float32Array(N), sy = new Float32Array(N);
+    const sr = new Float32Array(N), sa = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      sx[i] = Math.random() * canvas.width;
+      sy[i] = Math.random() * canvas.height * 0.5;
+      sr[i] = Math.random() * 1.5 + 0.5;
+      sa[i] = Math.random() * 0.6 + 0.2;
+    }
+
+    let animId = 0, frame = 0;
+    const animate = (now: number) => {
+      animId = requestAnimationFrame(animate);
+      if (!shouldPaint(now)) return;
+      const t = iRef.current / 100;
+      const w = canvas.width, h = canvas.height;
+      frame++;
+
+      ctx.fillStyle = `rgba(26,0,37,${0.06 + (1 - t) * 0.12})`;
+      ctx.fillRect(0, 0, w, h);
+
+      const horizon = h * 0.55;
+
+      // Synthwave sun
+      if (t > 0.15) {
+        const sunX = w * 0.5;
+        const sunY = horizon - 20;
+        const sunR = 50 + t * 30;
+        const sunGrad = ctx.createRadialGradient(sunX, sunY, sunR * 0.3, sunX, sunY, sunR);
+        sunGrad.addColorStop(0, `rgba(255,41,117,${0.15 * t})`);
+        sunGrad.addColorStop(0.5, `rgba(255,41,117,${0.05 * t})`);
+        sunGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = sunGrad;
+        ctx.fillRect(sunX - sunR, sunY - sunR, sunR * 2, sunR * 2);
+
+        // Horizontal lines through sun (synthwave effect)
+        ctx.strokeStyle = `rgba(26,0,37,${0.4 * t})`;
+        ctx.lineWidth = 3;
+        for (let i = 0; i < 6; i++) {
+          const ly = sunY - sunR * 0.4 + i * sunR * 0.16;
+          ctx.beginPath();
+          ctx.moveTo(sunX - sunR, ly);
+          ctx.lineTo(sunX + sunR, ly);
+          ctx.stroke();
+        }
+      }
+
+      // Perspective grid
+      if (t > 0.1) {
+        ctx.strokeStyle = `rgba(0,240,255,${0.06 * t})`;
+        ctx.lineWidth = 1;
+        // Horizontal grid lines with perspective
+        const gridRows = Math.floor(15 * t);
+        for (let i = 1; i <= gridRows; i++) {
+          const ratio = i / gridRows;
+          const y = horizon + ratio * ratio * (h - horizon);
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(w, y);
+          ctx.stroke();
+        }
+        // Vertical converging lines
+        const gridCols = Math.floor(20 * t);
+        for (let i = 0; i <= gridCols; i++) {
+          const topX = w * 0.5 + (i / gridCols - 0.5) * w * 0.15;
+          const botX = (i / gridCols) * w;
+          ctx.beginPath();
+          ctx.moveTo(topX, horizon);
+          ctx.lineTo(botX, h);
+          ctx.stroke();
+        }
+      }
+
+      // Twinkling stars in sky area
+      const starVis = Math.max(2, (N * t) | 0);
+      ctx.fillStyle = `rgba(240,192,255,${0.4 * t})`;
+      ctx.beginPath();
+      for (let i = 0; i < starVis; i++) {
+        sa[i] += (Math.random() - 0.5) * 0.03;
+        if (sa[i] < 0.1) sa[i] = 0.1; else if (sa[i] > 0.8) sa[i] = 0.8;
+        ctx.moveTo(sx[i] + sr[i], sy[i]);
+        ctx.arc(sx[i], sy[i], sr[i] * t, 0, Math.PI * 2);
+      }
+      ctx.fill();
+    };
+    animId = requestAnimationFrame(animate);
+
+    const onResize = () => sizeCanvas(canvas);
+    window.addEventListener('resize', onResize);
+    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', onResize); };
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-50" />;
+};
+
+/* ═══════════════ MINIMALIST ═══════════════ */
+const MinimalistBackground: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const iRef = useIntensityRef();
+  const shouldPaint = useFrameThrottle(iRef);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d')!;
+    sizeCanvas(canvas);
+
+    // Very subtle floating dots
+    const N = 30;
+    const dx = new Float32Array(N), dy = new Float32Array(N);
+    const dr = new Float32Array(N), ds = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      dx[i] = Math.random() * canvas.width;
+      dy[i] = Math.random() * canvas.height;
+      dr[i] = Math.random() * 1.5 + 0.5;
+      ds[i] = Math.random() * 0.15 + 0.03;
+    }
+
+    let animId = 0;
+    const animate = (now: number) => {
+      animId = requestAnimationFrame(animate);
+      if (!shouldPaint(now)) return;
+      const t = iRef.current / 100;
+      const w = canvas.width, h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+      if (t < 0.05) return;
+
+      const vis = Math.max(2, (N * t) | 0);
+      ctx.fillStyle = `rgba(161,161,170,${0.15 * t})`;
+      ctx.beginPath();
+      for (let i = 0; i < vis; i++) {
+        dy[i] -= ds[i] * (0.1 + t * 0.5);
+        if (dy[i] < -5) { dy[i] = h + 5; dx[i] = Math.random() * w; }
+        ctx.moveTo(dx[i] + dr[i], dy[i]);
+        ctx.arc(dx[i], dy[i], dr[i], 0, Math.PI * 2);
+      }
+      ctx.fill();
+
+      // Subtle connecting lines between close dots
+      if (t > 0.3) {
+        ctx.strokeStyle = `rgba(161,161,170,${0.04 * t})`;
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < vis; i++) {
+          for (let j = i + 1; j < vis; j++) {
+            const distSq = (dx[i] - dx[j]) ** 2 + (dy[i] - dy[j]) ** 2;
+            if (distSq < 15000) {
+              ctx.beginPath();
+              ctx.moveTo(dx[i], dy[i]);
+              ctx.lineTo(dx[j], dy[j]);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+    };
+    animId = requestAnimationFrame(animate);
+
+    const onResize = () => sizeCanvas(canvas);
+    window.addEventListener('resize', onResize);
+    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', onResize); };
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-30" />;
 };
 
 /* ═══════════════ ROUTER ═══════════════ */
@@ -569,6 +1109,11 @@ export const ThemeBackground: React.FC = () => {
     case 'dark': return <DarkBackground />;
     case 'toxic': return <ToxicBackground />;
     case 'candy': return <CandyBackground />;
+    case 'cyberpunk': return <CyberpunkBackground />;
+    case 'ocean': return <OceanBackground />;
+    case 'sunset': return <SunsetBackground />;
+    case 'retro': return <RetroBackground />;
+    case 'minimalist': return <MinimalistBackground />;
     default: return <DarkBackground />;
   }
 };

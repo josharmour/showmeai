@@ -5,6 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useThemeAnimations } from '../hooks/useThemeAnimations';
 import { aiProviders, aiModels } from '../data/models';
 import { ArrowRight } from 'lucide-react';
+import { RevealCard } from './RevealCard';
 
 export const ProvidersGrid: React.FC = () => {
   const { theme } = useTheme();
@@ -31,13 +32,7 @@ export const ProvidersGrid: React.FC = () => {
           {aiProviders.map((provider, index) => {
             const providerModels = aiModels.filter(m => m.providerSlug === provider.id);
             return (
-              <motion.div
-                key={provider.id}
-                variants={getItemVariants(index)}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
-              >
+              <RevealCard key={provider.id} variants={getItemVariants(index)}>
                 <Link
                   to={`/providers/${provider.id}`}
                   className="theme-card block h-full p-6 rounded-2xl bg-[var(--secondary-color)]/80 backdrop-blur border border-[var(--accent-color)]/20 hover:border-[var(--accent-color)] transition-all group"
@@ -64,7 +59,7 @@ export const ProvidersGrid: React.FC = () => {
                     Read full profile <ArrowRight size={14} className="ml-1" />
                   </div>
                 </Link>
-              </motion.div>
+              </RevealCard>
             );
           })}
         </div>

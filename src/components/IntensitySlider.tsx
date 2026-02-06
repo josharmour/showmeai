@@ -70,20 +70,61 @@ const TrackCanvas: React.FC<{ value: number; width: number }> = ({ value, width 
         }
       } else if (theme === 'candy') {
         const grad = ctx.createLinearGradient(0, 0, filled, 0);
-        grad.addColorStop(0, '#ec4899');
-        grad.addColorStop(0.5, '#f472b6');
-        grad.addColorStop(1, '#a855f7');
+        grad.addColorStop(0, '#f472b6');
+        grad.addColorStop(0.5, '#a855f7');
+        grad.addColorStop(1, '#818cf8');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 8, filled, 4);
-        // bouncing dots
+        // glowing dots
         for (let i = 0; i < Math.floor(v * 4); i++) {
           const bx = filled * ((i + 1) / 5);
           const by = 10 + Math.sin(frame * 0.12 + i * 1.5) * 3;
           ctx.beginPath();
           ctx.arc(bx, by, 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = ['#ec4899', '#facc15', '#34d399', '#a855f7'][i % 4];
+          ctx.fillStyle = ['#f472b6', '#a855f7', '#818cf8', '#c084fc'][i % 4];
           ctx.fill();
         }
+      } else if (theme === 'cyberpunk') {
+        const grad = ctx.createLinearGradient(0, 0, filled, 0);
+        grad.addColorStop(0, `rgba(255,107,43,${0.8 + Math.sin(frame * 0.06) * 0.2})`);
+        grad.addColorStop(1, `rgba(0,240,255,${0.6 + Math.sin(frame * 0.08) * 0.3})`);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 8, filled, 4);
+        // Glitch flicker
+        if (frame % 20 < 2 && v > 0.3) {
+          ctx.fillStyle = 'rgba(255,107,43,0.5)';
+          ctx.fillRect(Math.random() * filled, 7, 8, 6);
+        }
+      } else if (theme === 'ocean') {
+        const wave = Math.sin(frame * 0.06) * 0.3;
+        ctx.fillStyle = `rgba(14,165,233,${0.6 + wave})`;
+        ctx.fillRect(0, 8, filled, 4);
+        // Mini wave on track
+        ctx.strokeStyle = `rgba(6,182,212,${0.4 + wave})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let x = 0; x < filled; x += 2) {
+          const y = 10 + Math.sin((x + frame * 2) * 0.08) * 2 * v;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      } else if (theme === 'sunset') {
+        const grad = ctx.createLinearGradient(0, 0, filled, 0);
+        grad.addColorStop(0, `rgba(249,115,22,0.8)`);
+        grad.addColorStop(0.6, `rgba(168,85,247,0.6)`);
+        grad.addColorStop(1, `rgba(249,115,22,0.4)`);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 8, filled, 4);
+      } else if (theme === 'retro') {
+        const grad = ctx.createLinearGradient(0, 0, filled, 0);
+        const shift = (frame * 3) % 360;
+        grad.addColorStop(0, `hsla(${(shift + 330) % 360},100%,55%,0.8)`);
+        grad.addColorStop(1, `hsla(${(shift + 180) % 360},100%,55%,0.8)`);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 8, filled, 4);
+      } else if (theme === 'minimalist') {
+        ctx.fillStyle = `rgba(161,161,170,${0.3 + v * 0.4})`;
+        ctx.fillRect(0, 9, filled, 2);
       } else {
         // dark / light — subtle pulse
         const alpha = 0.5 + Math.sin(frame * 0.04) * 0.2 * v;

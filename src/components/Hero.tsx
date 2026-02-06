@@ -51,6 +51,84 @@ export const Hero: React.FC = () => {
           },
           transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' as const },
         };
+      case 'toxic':
+        return {
+          animate: {
+            scale: [1, 1.08, 0.98, 1.04, 1],
+            filter: [
+              'drop-shadow(0 0 8px #9333ea)',
+              'drop-shadow(0 0 15px #b8ff00)',
+              'drop-shadow(0 0 8px #9333ea)',
+            ],
+          },
+          transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' as const },
+        };
+      case 'candy':
+        return {
+          animate: {
+            y: [0, -10, 0],
+            rotate: [0, 5, -5, 0],
+            scale: [1, 1.08, 1],
+          },
+          transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' as const },
+        };
+      case 'cyberpunk':
+        return {
+          animate: {
+            x: [0, -2, 3, -1, 0],
+            opacity: [1, 0.7, 1, 0.8, 1],
+            filter: [
+              'drop-shadow(0 0 8px #ff6b2b)',
+              'drop-shadow(0 0 15px #00f0ff)',
+              'drop-shadow(0 0 8px #ff6b2b)',
+            ],
+          },
+          transition: { duration: 0.5, repeat: Infinity, repeatDelay: 3 },
+        };
+      case 'ocean':
+        return {
+          animate: {
+            y: [0, -6, 2, -4, 0],
+            filter: [
+              'drop-shadow(0 0 8px #0ea5e9)',
+              'drop-shadow(0 0 18px #06b6d4)',
+              'drop-shadow(0 0 8px #0ea5e9)',
+            ],
+          },
+          transition: { duration: 5, repeat: Infinity, ease: 'easeInOut' as const },
+        };
+      case 'sunset':
+        return {
+          animate: {
+            scale: [1, 1.04, 1],
+            filter: [
+              'drop-shadow(0 0 8px #f97316)',
+              'drop-shadow(0 0 20px #f97316) drop-shadow(0 0 40px #a855f7)',
+              'drop-shadow(0 0 8px #f97316)',
+            ],
+          },
+          transition: { duration: 4, repeat: Infinity, ease: 'easeInOut' as const },
+        };
+      case 'retro':
+        return {
+          animate: {
+            scale: [1, 1.1, 0.95, 1.05, 1],
+            filter: [
+              'drop-shadow(0 0 8px #ff2975)',
+              'drop-shadow(0 0 20px #00f0ff)',
+              'drop-shadow(0 0 15px #ff2975)',
+              'drop-shadow(0 0 8px #ff2975)',
+            ],
+          },
+          transition: { duration: 2.5, repeat: Infinity, ease: 'easeInOut' as const },
+        };
+      case 'minimalist':
+        return {
+          animate: {
+            y: [0, -4, 0],
+          },
+          transition: { duration: 6, repeat: Infinity, ease: 'easeInOut' as const },
+        };
       case 'light':
         return {
           animate: {
@@ -98,6 +176,42 @@ export const Hero: React.FC = () => {
           ],
         },
         transition: { duration: 2, repeat: Infinity },
+      };
+    }
+    if (theme === 'cyberpunk') {
+      return {
+        animate: {
+          textShadow: [
+            '2px 0 #ff6b2b, -2px 0 #00f0ff',
+            '-2px 0 #ff6b2b, 2px 0 #00f0ff',
+            '2px 0 #ff6b2b, -2px 0 #00f0ff',
+          ],
+        },
+        transition: { duration: 0.15, repeat: Infinity, repeatDelay: 4 },
+      };
+    }
+    if (theme === 'retro') {
+      return {
+        animate: {
+          textShadow: [
+            '0 0 10px #ff2975, 0 0 20px #ff2975',
+            '0 0 15px #00f0ff, 0 0 30px #00f0ff',
+            '0 0 10px #ff2975, 0 0 20px #ff2975',
+          ],
+        },
+        transition: { duration: 3, repeat: Infinity },
+      };
+    }
+    if (theme === 'sunset') {
+      return {
+        animate: {
+          textShadow: [
+            '0 0 10px rgba(249,115,22,0.4)',
+            '0 0 20px rgba(249,115,22,0.6), 0 0 40px rgba(168,85,247,0.3)',
+            '0 0 10px rgba(249,115,22,0.4)',
+          ],
+        },
+        transition: { duration: 4, repeat: Infinity },
       };
     }
     return {};

@@ -31,7 +31,7 @@ export const aiModels: AIModel[] = [
     name: 'GPT-5.3 Codex',
     provider: 'OpenAI',
     providerSlug: 'openai',
-    category: ['autonomous', 'coding', 'reasoning'],
+    category: ['autonomous', 'coding', 'reasoning', 'enterprise', 'multimodal'],
     tagline: 'The Infrastructure of Autonomy',
     description: 'The industry standard for autonomous digital labor. Capable of recursive self-improvement and long-horizon execution without human oversight.',
     essay: `By December 2026, GPT-5.3-Codex stands as the industry standard for autonomous digital labor. Its significance lies not in its ability to write a poem or answer a trivia question, but in its architectural capacity for "Recursive Self-Improvement." During its training phases, early versions of GPT-5.3 were utilized to debug the training data and manage deployment pipelines for the final model. This ability to "contribute to its own creation" has imbued the model with a unique proficiency in navigating complex, undefined software environments.
@@ -50,7 +50,7 @@ The model runs approximately 25% faster than the previous GPT-5.2 generation, a 
     name: 'Claude Opus 4.6',
     provider: 'Anthropic',
     providerSlug: 'anthropic',
-    category: ['reasoning', 'coding', 'analysis'],
+    category: ['reasoning', 'coding', 'analysis', 'enterprise', 'autonomous', 'multimodal'],
     tagline: 'The Engine of Reason',
     description: 'The pinnacle of "System 2" thinking. Features Adaptive Thinking and Computer Use for high-fidelity reasoning and legacy software navigation.',
     essay: `Claude Opus 4.6 represents the pinnacle of "System 2" thinking in artificial intelligence. By December 2026, it is widely recognized as the "Best" AI for tasks requiring deep nuance, complex logical deduction, and architectural software design. The defining innovation of the Claude 4 series is Adaptive Thinking.
@@ -69,7 +69,7 @@ Furthermore, Anthropic has pioneered "Computer Use", giving Claude the ability t
     name: 'Gemini 3 Pro',
     provider: 'Google',
     providerSlug: 'google',
-    category: ['multimodal', 'workspace', 'research'],
+    category: ['multimodal', 'workspace', 'research', 'enterprise'],
     tagline: 'The Multimodal Mastermind',
     description: 'Google\'s flagship model. 2M token context, native video/audio understanding, and deep Workspace integration. The "OS" of the Google ecosystem.',
     essay: `Gemini 3 Pro is the flagship of Google's 2026 AI lineup. While OpenAI focuses on autonomy and Anthropic on reasoning, Google has doubled down on "Native Multimodality." Gemini 3 Pro was trained from scratch on a seamless blend of text, code, audio, 4K video, and images.
@@ -88,7 +88,7 @@ Deeply integrated into Google Workspace, Gemini 3 Pro can pull data from Drive, 
     name: 'Gemini 3 Flash',
     provider: 'Google',
     providerSlug: 'google',
-    category: ['speed', 'production', 'multimodal'],
+    category: ['speed', 'production', 'multimodal', 'enterprise', 'coding'],
     tagline: 'The Speed of Thought',
     description: 'The fastest frontier model. Sub-100ms latency, massive context, and optimized for high-volume tasks like real-time voice agents and video analysis.',
     essay: `Gemini 3 Flash is the workhorse of the modern AI economy. Released in late 2025, it redefined the price-performance curve. It runs 3x faster than the Pro model and costs a quarter of the price, yet retains 90% of the reasoning capability.
@@ -107,7 +107,7 @@ Its massive 2M token context window allows it to process huge amounts of data (e
     name: 'Gemini 3 Thinking',
     provider: 'Google',
     providerSlug: 'google',
-    category: ['reasoning', 'science', 'math'],
+    category: ['reasoning', 'science', 'math', 'coding', 'research'],
     tagline: 'Deep Think Capability',
     description: 'Google\'s "System 2" reasoning model. Uses "Deep Think" to generate internal reasoning tokens for complex math, science, and coding tasks.',
     essay: `Gemini 3 Thinking is Google's answer to the "Reasoning" model category. Unlike standard models that predict the next token immediately, Gemini 3 Thinking engages a "Deep Think" process. It generates thousands of internal, invisible reasoning tokens to plan, verify, and self-correct before producing a final answer.
@@ -125,13 +125,13 @@ It is the model of choice for scientists, mathematicians, and algorithm engineer
   // ─── TIER 2: SPECIALIZED FRONTIER ───
   {
     id: 'magic-10m',
-    name: 'Magic LFM-10M',
+    name: 'Magic LTM-10M',
     provider: 'Magic.dev',
     providerSlug: 'magic',
-    category: ['coding', 'memory'],
+    category: ['coding', 'memory', 'enterprise'],
     tagline: 'The Infinite Context Coder',
-    description: 'A dedicated coding model with a 10-million token active context, capable of holding entire operating system codebases in working memory.',
-    essay: `While generalist models like GPT-5 and Claude argue over reasoning capabilities, Magic.dev has cornered the market on "Volume." The Magic LFM-10M (Large Foundation Model) is built on a proprietary architecture that moves beyond the quadratic scaling limits of Transformers, allowing for a practically infinite context window.
+    description: 'A dedicated coding model with a 10-million token active context, built on Magic\'s proprietary LTM (Long-Term Memory) architecture capable of holding entire operating system codebases in working memory.',
+    essay: `While generalist models like GPT-5 and Claude argue over reasoning capabilities, Magic.dev has cornered the market on "Volume." The Magic LTM-10M (Long-Term Memory) is built on a proprietary architecture that moves beyond the quadratic scaling limits of Transformers, allowing for a practically infinite context window.
 
 By late 2026, Magic is the "secret weapon" of senior architects. It doesn't just read a file; it reads the entire repo, the dependency repos, and the documentation, and holds it all in active memory. You can ask it to "trace the lifecycle of a request from the frontend button click through the load balancer, API gateway, microservices, and database," and it will generate a correct trace because it "sees" the entire system at once.
 
@@ -147,7 +147,7 @@ It lacks the conversational nuance of Claude or the agentic autonomy of GPT-5, b
     name: 'Grok 4.1',
     provider: 'xAI',
     providerSlug: 'xai',
-    category: ['reasoning', 'research', 'real-time'],
+    category: ['reasoning', 'research', 'real-time', 'autonomous'],
     tagline: 'Real-Time Intelligence',
     description: 'Human-like reasoning with direct access to real-time data streams from X (Twitter), making it the ultimate tool for news and market analysis.',
     essay: `Grok 4.1 represents the convergence of intelligence and information. While other models verify facts against a training cutoff, Grok lives in the "now." Integrated directly into the X platform data stream, it has the lowest latency for current events of any model on the market.
@@ -166,7 +166,7 @@ xAI's "unfiltered" philosophy remains a core differentiator. Grok 4.1 will engag
     name: 'DeepSeek V3 / R1',
     provider: 'DeepSeek',
     providerSlug: 'deepseek',
-    category: ['coding', 'math', 'open-weights'],
+    category: ['coding', 'math', 'open-weights', 'reasoning', 'open-source'],
     tagline: 'The Efficiency Disruptor',
     description: 'Frontier-class reasoning capabilities at 1/10th the cost of US models, driven by extreme architectural efficiency.',
     essay: `DeepSeek continues to be the wildcard of the AI industry in 2026. Their V3 and R1 models have proven that you don't need a trillion-dollar cluster to build frontier intelligence; you need better math.
@@ -206,10 +206,10 @@ Its "Connectors" ecosystem allows it to plug directly into Salesforce, Slack, Go
     name: 'Llama 4 Scout',
     provider: 'Meta',
     providerSlug: 'meta',
-    category: ['open-source', 'local', 'sovereign'],
+    category: ['open-source', 'local', 'sovereign', 'coding', 'reasoning'],
     tagline: 'Sovereign Intelligence',
     description: 'A 109B parameter MoE model capable of running on high-end consumer hardware, delivering reasoning rivaling GPT-4.',
-    essay: `The release of the Llama 4 family in April 2025 marked the maturation of open-weight AI. The family is split into two primary architectures. Llama 4 Scout is a 109B parameter model (active 17B) utilizing a Mixture-of-Experts (MoE) architecture. This design allows it to run on high-end consumer hardware (like a MacBook Pro with 64GB+ RAM) while delivering reasoning capabilities that rival the previous generation's GPT-4.
+    essay: `The release of the Llama 4 family in April 2025 marked the maturation of open-weight AI. The family is split into two primary architectures. Llama 4 Scout is a 109B parameter model (active 17B) utilizing a Mixture-of-Experts (MoE) architecture. At 4-bit quantization, the model weights alone require ~62GB of memory, meaning it needs 96GB+ Unified Memory (M4 Max or higher) to run with usable context. On a 128GB M4/M5 Ultra, it delivers reasoning capabilities that rival the previous generation's GPT-4.
 
 Llama 4 remains special because it is the most supported model in the ecosystem. Every tool, every library, and every optimization technique (like quantization) supports Llama first. For governments, defense contractors, and privacy-conscious enterprises, Llama 4 offers "Sovereign" intelligence—the ability to run entirely on one's own infrastructure.`,
     strengths: ['Sovereign/Local Deployment', 'Mixture-of-Experts Architecture', 'Privacy-Compliant', 'Massive Ecosystem Support', 'Free Open Weights'],
@@ -223,7 +223,7 @@ Llama 4 remains special because it is the most supported model in the ecosystem.
     name: 'Mistral Large 3',
     provider: 'Mistral AI',
     providerSlug: 'mistral',
-    category: ['open-source', 'edge', 'compliance'],
+    category: ['open-source', 'edge', 'compliance', 'coding', 'enterprise'],
     tagline: 'The European Shield',
     description: 'Optimized for function calling and edge deployment. The compliant, transparent alternative to American models.',
     essay: `Mistral AI positions itself as the champion of "Sovereign AI." With the EU AI Act in full force by 2026, Mistral provides the compliant, transparent alternative to American models. Their partnership with national governments to provide "AI for Citizens" highlights their focus on public sector utility.
@@ -240,7 +240,7 @@ Mistral's 2026 lineup is characterized by extreme efficiency. The Ministral seri
     name: 'Qwen3 Max',
     provider: 'Alibaba',
     providerSlug: 'alibaba',
-    category: ['open-weights', 'multilingual', 'coding'],
+    category: ['open-weights', 'multilingual', 'coding', 'open-source', 'enterprise'],
     tagline: 'The Global Polyglot',
     description: 'The world\'s best multilingual model, dominating benchmarks in Asian languages while remaining competitive in English and Code.',
     essay: `Qwen3 Max is the bridge between East and West. While GPT-5 and Claude are heavily Anglocentric, Qwen3 maintains state-of-the-art performance in Mandarin, Japanese, Arabic, and Southeast Asian languages.
@@ -259,7 +259,7 @@ For global companies, Qwen3 is often the "Translator General." Its coding abilit
     name: 'Sora 2.0',
     provider: 'OpenAI',
     providerSlug: 'openai',
-    category: ['video', 'creative'],
+    category: ['video', 'creative', 'multimodal'],
     tagline: 'Reality Simulation',
     description: 'The world\'s most advanced video generation model. Capable of generating minute-long, 4K, sound-synced video with consistent physics.',
     essay: `Sora 2.0 isn't just a video generator; it's a physics engine. Released in mid-2026, it solved the "temporal consistency" problem that plagued early AI video. Characters now maintain their identity, clothing, and facial features across cuts and scenes.
@@ -278,7 +278,7 @@ For filmmakers, it serves as the ultimate pre-visualization tool, and for advert
     name: 'Midjourney v7',
     provider: 'Midjourney',
     providerSlug: 'midjourney',
-    category: ['image', 'art'],
+    category: ['image', 'art', 'creative'],
     tagline: 'The Gold Standard of Art',
     description: 'Unmatched artistic quality and photorealism. Now features a full web editor, 3D model export, and style consistency across series.',
     essay: `Midjourney v7 remains the undisputed king of static aesthetics. In 2026, they expanded beyond 2D images into "Texture & 3D." You can now generate a character in Midjourney and export a textured 3D mesh for use in game engines.
@@ -295,7 +295,7 @@ The "Style Reference" capability has been perfected, allowing brands to upload a
     name: 'ElevenLabs V4',
     provider: 'ElevenLabs',
     providerSlug: 'elevenlabs',
-    category: ['audio', 'voice', 'dubbing'],
+    category: ['audio', 'voice', 'dubbing', 'creative', 'multimodal'],
     tagline: 'Universal Voice',
     description: 'Indistinguishable human speech generation with emotional control, real-time translation, and cross-lingual voice cloning.',
     essay: `ElevenLabs V4 has effectively solved the "Turing Test" for voice. It can take a 3-second sample of your voice and let you speak fluent Japanese, Spanish, or Swahili, preserving your exact timbre and emotional inflection.
@@ -312,7 +312,7 @@ The 2026 update introduced "Performance Director," allowing users to guide the d
     name: 'Suno V5',
     provider: 'Suno',
     providerSlug: 'suno',
-    category: ['music', 'audio'],
+    category: ['music', 'audio', 'creative'],
     tagline: 'Radio-Ready Music',
     description: 'Generates full 4-minute songs with cohesive structure (verse, chorus, bridge) and broadcast-quality vocals. The "Photoshop for Music".',
     essay: `Suno V5 has done for music what Midjourney did for images. It allows anyone to generate radio-quality tracks in any genre. The V5 update introduced "Stem Separation" and "In-Track Editing," allowing producers to keep the vocals but change the drums, or rewrite the lyrics of the second verse without regenerating the whole song.
@@ -331,7 +331,7 @@ It has become a standard tool for game developers, content creators, and even pr
     name: 'AlphaFold 4',
     provider: 'Google DeepMind',
     providerSlug: 'google',
-    category: ['science', 'biology'],
+    category: ['science', 'biology', 'research', 'enterprise'],
     tagline: 'The Biology Solver',
     description: 'Predicts the structure of nearly all molecules in the Protein Data Bank. The fundamental tool for modern drug discovery and bio-engineering.',
     essay: `AlphaFold 4 is arguably the most "impactful" AI on this list for human longevity. It has moved beyond proteins to simulate DNA, RNA, and Ligand interactions. In 2026, it is used to design custom enzymes for plastic degradation and personalized cancer therapeutics. It is the operating system of the new biotech revolution.`,
@@ -346,7 +346,7 @@ It has become a standard tool for game developers, content creators, and even pr
     name: 'GitHub Copilot',
     provider: 'GitHub',
     providerSlug: 'github',
-    category: ['coding', 'platform'],
+    category: ['coding', 'platform', 'enterprise', 'autonomous'],
     tagline: 'The AI Developer Platform',
     description: 'Not just a model, but a platform. Integrates GPT-5, Claude, and specialized agents into a cohesive workflow for teams.',
     essay: `GitHub Copilot in 2026 is the orchestration layer for software development. It doesn't just autocomplete code; it manages the "Agentic Workplace." It routes simple tasks to fast models, complex architecture to Claude Opus, and testing to specialized verification agents.
@@ -363,7 +363,7 @@ Its "Workspace" feature allows it to understand the context of the entire organi
     name: 'Perplexity Pro',
     provider: 'Perplexity',
     providerSlug: 'perplexity',
-    category: ['research', 'search'],
+    category: ['research', 'search', 'autonomous', 'enterprise'],
     tagline: 'The Knowledge Engine',
     description: 'The antidote to hallucination. Combines the best frontier models with a live search index to provide verified, cited answers.',
     essay: `Perplexity remains the "Second Brain" for knowledge workers. In 2026, its "Deep Research" mode can spend hours browsing thousands of academic papers and news archives to produce a Ph.D.-level literature review.
@@ -426,7 +426,7 @@ export const aiProviders: AIProvider[] = [
   {
     id: 'magic',
     name: 'Magic.dev',
-    description: 'The Infinite Context. Makers of LFM-10M.',
+    description: 'The Infinite Context. Makers of LTM-10M.',
     essay: `Magic.dev has solved the memory bottleneck. Their non-Transformer architecture allows for effectively infinite context, changing how we think about software maintenance.`,
     models: ['magic-10m'],
     website: 'https://magic.dev',
