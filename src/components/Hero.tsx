@@ -1,13 +1,54 @@
-import React from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useThemeAnimations } from '../hooks/useThemeAnimations';
 import { Bot, Sparkles, BookOpen, GitCompare, Play, GraduationCap } from 'lucide-react';
 
+const HERO_VIDEOS = [
+  '/AI_Neural_Core_Visualization.mp4',
+  '/AI_Logos_in_Space_Animation.mp4',
+];
+
 export const Hero: React.FC = () => {
   const { theme } = useTheme();
   const { containerVariants } = useThemeAnimations();
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([null, null]);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Single effect: play the active video, pause & reset the other
+  useEffect(() => {
+    const active = videoRefs.current[activeIndex];
+    const inactiveIdx = activeIndex === 0 ? 1 : 0;
+    const inactive = videoRefs.current[inactiveIdx];
+
+    // Ensure inactive video is paused immediately
+    if (inactive) {
+      inactive.pause();
+      inactive.currentTime = 0;
+      inactive.muted = true;
+    }
+
+    // Play the active video
+    if (active) {
+      active.muted = true;
+      active.currentTime = 0;
+      active.play().catch(() => {
+        const tryPlay = () => {
+          active.play().catch(() => { });
+          document.removeEventListener('click', tryPlay);
+          document.removeEventListener('scroll', tryPlay);
+        };
+        document.addEventListener('click', tryPlay, { once: true });
+        document.addEventListener('scroll', tryPlay, { once: true });
+      });
+    }
+  }, [activeIndex]);
+
+  // When a video ends, crossfade to the next one
+  const handleVideoEnd = useCallback(() => {
+    setActiveIndex(prev => (prev + 1) % HERO_VIDEOS.length);
+  }, []);
 
   const getIconAnimation = () => {
     switch (theme) {
@@ -220,6 +261,25 @@ export const Hero: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 pt-24 text-center relative overflow-hidden">
 
+      {/* Full-screen Background Video Crossfade */}
+      <div className="hero-video-bg">
+        {HERO_VIDEOS.map((src, i) => (
+          <video
+            key={src}
+            ref={el => { videoRefs.current[i] = el; }}
+            muted
+            playsInline
+            preload="auto"
+            onEnded={handleVideoEnd}
+            className={`hero-video-fullscreen hero-video-crossfade ${i === activeIndex ? 'hero-video-active' : 'hero-video-inactive'
+              }`}
+          >
+            <source src={src} type="video/mp4" />
+          </video>
+        ))}
+        <div className="hero-video-overlay" />
+      </div>
+
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -244,7 +304,7 @@ export const Hero: React.FC = () => {
         <p className="text-xl md:text-2xl mb-4 font-semibold text-[var(--accent-color)]">
           The Strategic Landscape of AI in Late 2026
         </p>
-        
+
         <p className="text-lg md:text-xl mb-12 opacity-90 max-w-3xl mx-auto leading-relaxed">
           Gemini 3 Pro, Flash, and Thinking have arrived. Welcome to the <span className="font-bold">Year of the Autonomous Agent</span>.
         </p>
